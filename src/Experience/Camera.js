@@ -10,6 +10,7 @@ export default class Camera {
     this.canvas = this.experience.canvas;
     this.setInstance();
     this.setOrbitControls();
+
   }
   setInstance() {
     this.instance = new THREE.PerspectiveCamera(
@@ -27,6 +28,7 @@ export default class Camera {
     this.controls.target = new THREE.Vector3(0, 1, 1);
     this.controls.target = new THREE.Vector3(0, 0, 0);
   }
+
   resize() {
     this.instance.aspect = this.sizes.width / this.sizes.height;
     this.instance.updateProjectionMatrix();
@@ -34,4 +36,5 @@ export default class Camera {
   update() {
     this.controls.update();
   }
+
 }

@@ -1,12 +1,10 @@
 import * as THREE from 'three'
 import Experience from '../Experience.js'
-// import Hydra from 'hydra-synth';
-
-// const hydra = new Hydra({ detectAudio: false })
+// import Audio from '../Utils/Audio.js'
 
 export default class Cube
 {
-    constructor(hydra)
+    constructor()
     {
         this.experience = new Experience()
         this.scene = this.experience.scene
@@ -17,9 +15,6 @@ export default class Cube
         this.setMaterial()
         this.setMesh()
 
-        // Save reference to Hydra Synth instance
-        // this.hydra = hydra;
-        // console.log(this.hydra)
     }
 
     setGeometry()
@@ -44,12 +39,8 @@ export default class Cube
         this.scene.add(this.mesh)
         this.mesh.position.y = 0
     }
-
+    
     update() 
     {
-
-        // Update the scale of the mesh based on audio input from Hydra Synth
-        // const scaleY = this.hydra.fft[0]; // Assuming the first frequency bin value represents the audio amplitude
-        // this.mesh.scale.y = scaleY;
     }
 }
