@@ -28,3 +28,11 @@ body
     font-size: 2em;
     margin: 10px;
 }
+.social-icon {
+    width: 2em;
+    height: 2em;
+}
+.social-icon:hover{
+    opacity: 0.5;
+    
+}
