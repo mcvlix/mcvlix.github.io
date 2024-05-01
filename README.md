@@ -1,2 +1,2 @@
-# https://mcvlix.github.io
+# mcvlix.github.io
  
