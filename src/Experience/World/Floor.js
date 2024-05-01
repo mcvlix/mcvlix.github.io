@@ -10,7 +10,7 @@ export default class Floor{
         // this.resources = this.experience.resources
         this.debug = this.experience.debug
 
-        this.geometry = new THREE.PlaneGeometry( 300, 300 );
+        this.geometry = new THREE.PlaneGeometry( 50, 50 );
         this.horizontalGridMaterial = new THREE.ShaderMaterial({
             vertexShader: horizontalGridVertexShader,
             fragmentShader: horizontalGridFragmentShader,

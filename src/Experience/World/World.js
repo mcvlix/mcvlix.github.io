@@ -2,7 +2,7 @@ import * as THREE from "three";
 import Experience from "../Experience.js";
 import Environment from "./Environment.js";
 import Floor from "./Floor.js";
-import Cube from "./Cube.js";
+import Gini from "./Gini.js";
 
 export default class World {
   constructor() {
@@ -13,7 +13,7 @@ export default class World {
 
     // Objects
     this.floor = new Floor();
-    this.cube = new Cube();
+    this.gini = new Gini();
 
     // Wait for resources
     this.ready = false;
@@ -28,11 +28,9 @@ export default class World {
     });
   }
   update() {
-    // Bug in the ready function
-    // if (this.ready) {
-    this.cube.update();
-      // this.butterflies.update();
-      // this.butterfly.update();
-    // }
+    // // Bug in the ready function
+    
+      this.gini.update();
+    
   }
 }
