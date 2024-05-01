@@ -2,7 +2,7 @@ import * as THREE from "three";
 import Experience from "../Experience.js";
 import Environment from "./Environment.js";
 import Floor from "./Floor.js";
-import Gini from "./Gini.js";
+import Dini from "./Dini.js";
 
 export default class World {
   constructor() {
@@ -13,7 +13,7 @@ export default class World {
 
     // Objects
     this.floor = new Floor();
-    this.gini = new Gini();
+    this.dini = new Dini();
 
     // Wait for resources
     this.ready = false;
@@ -30,7 +30,7 @@ export default class World {
   update() {
     // // Bug in the ready function
     
-      this.gini.update();
+      this.dini.update();
     
   }
 }

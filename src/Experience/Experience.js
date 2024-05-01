@@ -12,7 +12,7 @@ import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 import Controllers from "./Controllers.js";
 
 // import Cube from "./World/Cube.js";
-// import Gini from "./World/Gini.js";
+// import Dini from "./World/Gini.js";
 
 let instance = null;
 
