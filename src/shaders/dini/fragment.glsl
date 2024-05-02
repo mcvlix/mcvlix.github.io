@@ -13,10 +13,12 @@ void main() {
     // vec3 color = vec3(r,g,b) * sin(uTime);
     // color += 0.3;
 
+    // Modulo to improve performance
+    float modTime = mod(uTime, 100000.0);
 
     vec3 color = vec3(
-        vPosition.y - cos(uTime* 0.003),
-        vPosition.z + sin(uTime * 0.003) - vPosition.y * 0.5,
+        vPosition.y - cos(modTime * 0.003),
+        vPosition.z + sin(modTime * 0.003) - vPosition.y * 0.5,
         vPosition.x 
         );
 
