@@ -17,11 +17,10 @@
     "three": "^0.148.0",
     "three.js": "^0.77.1"
   },
-  "description": "",
+  "description": "![image](https://github.com/mcvlix/mcvlix.github.io/assets/141688706/6aca01bf-373f-46ae-b14e-d7fc66701b79)",
   "main": "vite.config.js",
   "directories": {
-    "doc": "docs",
-    "src": "src"
+    "doc": "docs"
   },
   "keywords": [],
   "author": "",
