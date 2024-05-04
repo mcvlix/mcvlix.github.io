@@ -9,15 +9,17 @@ varying vec3 vPosition;
 
 void main()
 {
+
+    float modTime = mod(uTime, 10000.0);
+
     vPosition = position.xyz + 0.5;
 
-    float a = width * sin(uTime * 0.0002);
+    float a = width * sin(modTime * 0.0002);
     float b = 0.2;
-
     float u = 
         vPosition.x 
         * totalRadians * PI 
-        * abs(sin(uTime * 0.0002));
+        * abs(sin(modTime * 0.0002));
     float v = 
         vPosition.y;
 

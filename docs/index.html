@@ -9,38 +9,52 @@
 
     <title>MCVLIX Homepage</title>
 
-    <!-- Import stylesheet -->
     <link rel="stylesheet" href="/style.css">
-
-    <style>
-
-        .text-shadow {
-            text-shadow: 2px 2px 3px rgb(95, 0, 0); /* Adjust values as needed */
-        }
-
-
-        /* Add styles for the shadow */
-        .image-link {
-            position: absolute;
-            display: inline-block; /* Ensure the link behaves like a block element */
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Define the shadow */
-        }
-
-    </style>
 </head>
 <body>
     <h1 style="position:absolute; top: 0px; left: 0; color: rgb(255, 255, 255); margin: 1em; font-family: Georgia, serif;" class="text-shadow">MAX CALIXTO</h1>
     <h1 style="position:absolute; top: 60px; left: 18px; color:white; margin: 1em; font-family: Georgia, serif; font-size: smaller;" class="text-shadow"> Applied Math Student + SET Research Assistant @ UCSC </h1>
 
+    <!-- Button to hide image links -->
+    <button class="hide-button" onclick="toggleImageLinks()">
+        <img src="./icons/menubutton.svg" alt="Image">
+    </button>
 
-    <a class="image-link" href="https://github.com" style="top: 30px; right: 18px;">
-        <img class="social-icon" src="./icons/github.png" alt="MCVLIX Github" width = "40" height = "40">
+    <!-- Image links -->
+    <a class="image-link" href="https://github.com" style="top: 35px; right: 160px;">
+        <img class="social-icon" src="./icons/linkedin.svg" alt="GitHub">
+    </a>
+    <a class="image-link" href="https://linkedin.com/in/mcvlix" style="top: 35px; right: 200px;">
+        <img class="social-icon" src="./icons/reddit.svg" alt="LinkedIn">
+    </a>
+    <a class="image-link" href="https://www.youtube.com/@mcvlix" style="top: 35px; right: 240px;">
+        <img class="social-icon" src="./icons/youtube.svg" alt="Youtube">
+    </a>
+    <a class="image-link" href="https://discord.gg/yzxh5RyfS2" style="top: 35px; right: 120px;">
+        <img class="social-icon" src="./icons/discord.svg" alt="Discord">
+    </a>
+    <a class="image-link" href="https://linkedin.com/in/mcvlix" style="top: 35px; right: 280px;">
+        <img class="social-icon" src="./icons/github.svg" alt="GitHub">
+    </a>
+    <a class="image-link" href="https://Learn.Microsoft.com/?wt.mc_id=studentamb_362841" style="top: 35px; right: 80px;">
+        <img class="social-icon" src="./icons/microsoft.svg" alt="Microsoft Learn">
     </a>
 
-    
+    <script>
+        function toggleImageLinks() {
+            var imageLinks = document.querySelectorAll('.image-link');
+            imageLinks.forEach(function(link) {
+                if (link.style.display !== 'none') {
+                    link.style.display = 'none';
+                } else {
+                    link.style.display = 'inline-block';
+                }
+            });
+        }
+    </script>
+
     <canvas class="webgl"></canvas>
     <script type="module" src="./assets/index-7cb10d1e.js"></script>
 
-    
 </body>
 </html>

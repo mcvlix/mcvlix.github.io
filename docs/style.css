@@ -31,8 +31,37 @@ body
 .social-icon {
     width: 2em;
     height: 2em;
+    border-radius: 0.3em;
+    bottom: 30px;
+    box-shadow: 2px 2px 0px rgba(128,128,128,0.5);
 }
 .social-icon:hover{
-    opacity: 0.5;
+    opacity: 0.4;
     
+}
+
+.text-shadow {
+    text-shadow: 2px 2px 3px rgb(95, 0, 0); /* Adjust values as needed */
+}
+
+/* Add styles for the shadow */
+.image-link {
+    position: absolute;
+    display: inline-block; /* Ensure the link behaves like a block element */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Define the shadow */
+}
+
+/* Style for the button */
+.hide-button {
+    position: absolute;
+    top: 35px;
+    right: 30px;
+    height: 30px;
+    background-color: rgba(128,128,128,0.0);
+    border: none;
+    cursor: pointer;
+    
+}
+.hide-button:hover {
+    opacity: 0.4;
 }
