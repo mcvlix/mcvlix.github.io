@@ -41,7 +41,11 @@ body
 }
 
 .text-shadow {
+<<<<<<< Updated upstream
     text-shadow: 2px 2px 3px rgb(95, 0, 0); /* Adjust values as needed */
+=======
+    text-shadow: 2px 2px 3px rgb(167, 167, 167); /* Adjust values as needed */
+>>>>>>> Stashed changes
 }
 
 /* Add styles for the shadow */

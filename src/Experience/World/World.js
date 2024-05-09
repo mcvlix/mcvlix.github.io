@@ -3,6 +3,10 @@ import Experience from "../Experience.js";
 import Environment from "./Environment.js";
 import Floor from "./Floor.js";
 // import Dini from "./Dini.js";
+<<<<<<< Updated upstream
+=======
+import Glasses from "./Glasses.js"
+>>>>>>> Stashed changes
 
 export default class World {
   constructor() {
@@ -10,9 +14,16 @@ export default class World {
     this.sizes = this.experience.sizes;
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
+    
 
     // Objects
     this.floor = new Floor();
+<<<<<<< Updated upstream
+=======
+    this.glasses = new Glasses();
+    this.environment = new Environment();
+
+>>>>>>> Stashed changes
     // this.dini = new Dini();
 
     // Wait for resources
@@ -21,7 +32,6 @@ export default class World {
       // Setup
       console.log("resources ready");
 
-      this.environment = new Environment();
       this.ready = true;
       
       console.log(this.ready)
@@ -30,7 +40,11 @@ export default class World {
   update() {
     console.log('hello')
     // // Bug in the ready function
+<<<<<<< Updated upstream
     
+=======
+    this.glasses.floatingAnimation()
+>>>>>>> Stashed changes
       // this.dini.update();
     
   }
