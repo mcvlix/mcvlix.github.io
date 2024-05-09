@@ -6,7 +6,7 @@ import diniFragmentShaders from '../../shaders/dini/fragment.glsl'
 
 // import Audio from '../Utils/Audio.js'
 
-export default class Gini
+export default class Dini
 {
     constructor()
     {
