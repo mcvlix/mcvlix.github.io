@@ -2,8 +2,8 @@ import * as THREE from "three";
 import Experience from "../Experience.js";
 import Environment from "./Environment.js";
 import Floor from "./Floor.js";
-// import Dini from "./Dini.js";
 import Glasses from "./Glasses.js"
+import ParticleSystem from "./Particles.js"
 
 export default class World {
   constructor() {
@@ -17,8 +17,7 @@ export default class World {
     this.floor = new Floor();
     this.glasses = new Glasses();
     this.environment = new Environment();
-
-    // this.dini = new Dini();
+    this.particleSystem = new ParticleSystem(this.glasses);
 
     // Wait for resources
     this.ready = false;
@@ -32,10 +31,7 @@ export default class World {
     });
   }
   update() {
-    console.log('hello')
-    // // Bug in the ready function
     this.glasses.floatingAnimation()
-      // this.dini.update();
-    
+    this.particleSystem.updatePositions()
   }
 }

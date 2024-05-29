@@ -4,8 +4,6 @@ import Experience from '../Experience.js'
 import diniVertexShaders from '../../shaders/dini/vertex.glsl'
 import diniFragmentShaders from '../../shaders/dini/fragment.glsl'
 
-// import Audio from '../Utils/Audio.js'
-
 export default class Dini
 {
     constructor()
@@ -14,6 +12,8 @@ export default class Dini
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.debug = this.experience.debug
+
+        
 
         this.setGeometry()
         this.setTextures()
@@ -63,9 +63,5 @@ export default class Dini
     update() 
     {
         this.material.uniforms.uTime.value = this.experience.time.elapsed
-    }
-
-    setParams()
-    {
     }
 }

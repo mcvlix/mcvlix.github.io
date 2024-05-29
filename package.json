@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "lil-gui": "^0.17.0",
+    "stats.js": "^0.17.0",
     "teleportvr": "^3.0.4",
     "three": "^0.148.0",
     "three.js": "^0.77.0"

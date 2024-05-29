@@ -16,8 +16,6 @@ export default class Glasses{
         this.time = this.experience.time
         this.debug = this.experience.debug
 
-        
-
         this.dracoLoader = new DRACOLoader()
         this.dracoLoader.setDecoderPath('/draco/')
 
@@ -33,9 +31,12 @@ export default class Glasses{
         // make all glasses into a group
         // have a separate child, animation, shaders for lens, frames, and framedupes
         this.setMaterial()
+
+        this.frameDupesY = 0
+        this.glassesY = 0
+
         this.setGlasses()
         this.setFrameDupes(cloneCount, deltaY, true, true)
-        console.log(this.frameDupes)
 
         const axesHelper = new THREE.AxesHelper()
         this.scene.add(axesHelper)
@@ -86,6 +87,7 @@ export default class Glasses{
                     lens.traverse((child) => {
                         if (child.isMesh) {
                             child.material = this.lensMaterial;
+                            child.geometry.wireframe = true
                         }
                     });
                     this.lens = lens;
@@ -144,15 +146,15 @@ export default class Glasses{
                 this.frameDupes.add(gltf.scene);
 
                 this.mirroredFrameDupes = new THREE.Group()
-                // for (let i = 0; i < count; i++) {
+                
+                for (let i = 0; i < count; i++) {
 
-                //     const clonedFrameDupe = gltf.scene.clone();
-                //     clonedFrameDupe.position.y = i * cloneSpacing;
-                //     // clonedFrameDupe.scale.x = (i+1) * 1.2;
-                //     clonedFrameDupe.rotation.x = -Math.PI * i * 0.05;
-                //     clonedFrameDupe.scale.z = Math.pow(1.1,(i));
-                //     this.frameDupes.add(clonedFrameDupe);
-                // }
+                    const clonedFrameDupe = gltf.scene.clone();
+                    clonedFrameDupe.position.y = i * cloneSpacing;
+                    clonedFrameDupe.rotation.x = -Math.PI * i * 0.05;
+                    clonedFrameDupe.scale.z = Math.pow(1.1,(i));
+                    this.frameDupes.add(clonedFrameDupe);
+                }
 
                 this.frameDupes.traverse((child =>{
                     if (child.isMesh) {
@@ -185,29 +187,27 @@ export default class Glasses{
                 
                 this.scene.add(this.frameDupes)
                 this.scene.add(this.mirroredFrameDupes)
-                console.log(this.frameDupes)
                 
             }
         )
     }
     
     floatingAnimation(){
-
-        const animSpeed = this.experience.time.elapsed * 0.0015
-        if (this.frameDupes && this.playFloatingAnimation) { // Check if frameDupes is initialized
-            
-            const yPosition = Math.sin(animSpeed);
-            const zPosition = Math.cos(animSpeed);
-            const scaleFactor = 1.1 + Math.sin(animSpeed) * 0.1
-            
-            this.frameDupes.position.y = 0.2 * yPosition 
-            this.mirroredFrameDupes.position.y = - 0.2* yPosition
-        }
+        const animSpeed = 0.0015
+        const animTime = this.experience.time.elapsed * animSpeed %( 1 / animSpeed )
 
         
+        if (this.frameDupes && this.playFloatingAnimation) { // Check if frameDupes is initialized
+            
+            this.frameDupesY = Math.sin(animTime);
+            
+            this.frameDupes.position.y = 0.2 * this.frameDupesY 
+            this.mirroredFrameDupes.position.y = - 0.2* this.frameDupesY
+        }
+
         if (this.glasses) {
-            const yPosition = - Math.sin(animSpeed) * 2;
-            this.glasses.position.y = -0.25 - (0.1 * yPosition)
+            this.glassesY = - Math.sin(animTime) * 2
+            this.glasses.position.y = -0.25 - (0.1 * this.glassesY)
         }
     }
 }

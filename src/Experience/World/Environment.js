@@ -13,7 +13,7 @@ export default class Environment {
       this.debugFolder = this.debug.ui.addFolder('environment')
     }
 
-    this.scene.background = new THREE.Color("lightblue");
+    this.scene.background = new THREE.Color("black");
     this.setSunLight()
     this.setAmbientLight();
     this.setEnvironmentMap()
@@ -36,7 +36,6 @@ export default class Environment {
       // Debug
       if(this.debug.active)
       {
-        console.log(this.debugFolder)
           this.debugFolder
               .add(this.sunLight, 'intensity')
               .name('sunLightIntensity')
