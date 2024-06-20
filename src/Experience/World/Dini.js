@@ -46,7 +46,7 @@ export default class Gini
                 width: {value: 2.0},
                 totalRadians: {value: 6.0},
             },
-            wireframe: true,
+            wireframe: false,
             transparent: true
         })
     }
@@ -65,7 +65,7 @@ export default class Gini
         this.material.uniforms.uTime.value = this.experience.time.elapsed
     }
 
-    setParams()
+    setParams(animSpeed, width, radians)
     {
     }
 }

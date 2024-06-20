@@ -28,6 +28,28 @@ body
     font-size: 2em;
     margin: 10px;
 }
+
+.header-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #ffffff;
+    margin: 1em;
+    font-family: Georgia, serif;
+    text-shadow: 2px 2px 3px rgba(95, 0, 0);
+}
+
+.header-subtitle {
+    position: absolute;
+    top: 60px;
+    left: 18px;
+    color: white;
+    margin: 1em;
+    font-family: Georgia, serif;
+    font-size: smaller;
+    text-shadow: 2px 2px 3px rgba(95, 0, 0);
+}
+
 .social-icon {
     width: 2em;
     height: 2em;
@@ -40,12 +62,9 @@ body
     
 }
 
-.text-shadow {
-    text-shadow: 2px 2px 3px rgb(95, 0, 0); /* Adjust values as needed */
-}
-
 /* Add styles for the shadow */
 .image-link {
+    top: 35px;
     position: absolute;
     display: inline-block; /* Ensure the link behaves like a block element */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Define the shadow */
