@@ -6,10 +6,11 @@ import diniFragmentShaders from '../../shaders/dini/fragment.glsl'
 
 // import Audio from '../Utils/Audio.js'
 
-export default class Gini
+export default class Dini
 {
     constructor()
     {
+        this.name = 'Dini'
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
@@ -19,12 +20,12 @@ export default class Gini
         this.setTextures()
         this.setMaterial()
         this.setMesh()
-
+        
     }
 
     setGeometry()
     {
-        this.geometry = new THREE.BoxGeometry(1,1,1,100, 20, 20)
+        this.geometry = new THREE.BoxGeometry(1,1,1,100, 20, 200)
         // this.geometry = new THREE.PlaneGeometry(1,1,100,100)
     }
 
@@ -46,14 +47,16 @@ export default class Gini
                 width: {value: 2.0},
                 totalRadians: {value: 6.0},
             },
-            wireframe: false,
-            transparent: true
+            wireframe: true,
+            transparent: false
         })
     }
     setMesh()
     {
+
         this.mesh = new THREE.Mesh(this.geometry, this.material)
         this.mesh.receiveShadow = true
+        this.mesh.name = this.name
         this.scene.add(this.mesh)
 
         this.mesh.scale.y = 1.0
@@ -63,9 +66,5 @@ export default class Gini
     update() 
     {
         this.material.uniforms.uTime.value = this.experience.time.elapsed
-    }
-
-    setParams(animSpeed, width, radians)
-    {
     }
 }

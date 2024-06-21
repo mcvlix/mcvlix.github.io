@@ -8,15 +8,15 @@ import Camera from "./Camera.js";
 import Renderer from "./Renderer.js";
 import World from "./World/World.js";
 import sources from "./sources.js";
+
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 import Controllers from "./Controllers.js";
 
-// import Cube from "./World/Cube.js";
-// import Dini from "./World/Gini.js";
 
 let instance = null;
 
 export default class Experience {
+
   constructor(canvas) {
     if (instance) {
       return instance;
@@ -75,18 +75,13 @@ export default class Experience {
 
     this.controllers = new Controllers();
 
-    this.raycaster = new THREE.Raycaster();
-    this.mouse = new THREE.Vector2();
-    this.INTERSECTED = null;
     window.addEventListener("mousemove", (event) => {
       this.mouse.x = (event.clientX / this.sizes.width) * 2 - 1;
       this.mouse.y = -(event.clientY / this.sizes.height) * 2 + 1;
     });
-    window.addEventListener("click", () => {
-      if (this.INTERSECTED) {
-        // do something here if there is something in this.INTERSECTED
-      }
-    });
+
+    
+
     this.sizes.on("resize", () => {
       this.resize();
       this.camera.resize();
@@ -95,19 +90,54 @@ export default class Experience {
     this.time.on("tick", () => {
       this.update();
     });
+
+    /**
+     * Raycaster
+     */
+
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
+  
+    this.scene.traverse((child) =>{
+      if (child.name === "Dini") {
+        this.dini = child
+      }
+    })
+    
+    this.currentIntersect = null;
   }
 
   resize() {
     console.log("resized occured");
     this.camera.resize();
   }
+
   update() {
     this.camera.update();
     this.world.update();
 
     //change this to be controller if controller is active
     this.raycaster.setFromCamera(this.mouse, this.camera.instance);
+
+    this.intersects = this.raycaster.intersectObjects( this.dini );
+    if(this.intersects.length)
+      {
+          if(!this.currentIntersect)
+          {
+              console.log('mouse enter')
+          }
+          this.currentIntersect = this.intersects[0]
+      }
+      else
+      {
+          if(this.currentIntersect)
+          {
+              console.log('mouse leave')
+          }
+          this.currentIntersect = null
+      }
   }
+
   destroy() {
     this.sizes.off("resize");
     this.time.off("tick");
@@ -129,10 +159,14 @@ export default class Experience {
         }
       }
     });
+
     this.camera.controls.dispose();
     this.renderer.instance.dispose();
     if (this.debug.active) {
       this.debug.ui.destroy();
     }
+  }
+  getCamera(){
+    return this.camera
   }
 }
