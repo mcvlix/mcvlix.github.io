@@ -54,7 +54,7 @@
   
   /* Styling for social icons */
   .social-icon {
-    position: absolute;
+    position: relative;
     width: 2em;
     height: 2em;
     margin: -4px;
