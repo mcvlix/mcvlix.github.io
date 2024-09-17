@@ -1,0 +1,201 @@
+
+
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Apply basic styles to html and body */
+  html, body {
+    overflow: hidden;
+  }
+  
+  /* Style for elements with class .webgl */
+  .webgl {
+    outline: none;
+  }
+  
+  /* Styling for #settings container */
+  #settings {
+    width: 100vw;
+    text-align: center;
+    margin: 0.1em 0;
+    padding: 0;
+  }
+  
+  /* Button styles inside #settings */
+  #settings > button {
+    font-size: 2em;
+    margin: 10px;
+  }
+  
+  /* Header text style */
+  .header-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #fff;
+    margin: 1em;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', sans-serif;
+    text-shadow: 2px 2px 3px rgba(95, 0, 0);
+    border-bottom: 2px solid ;
+  }
+  
+  /* Header subtitle style */
+  .header-subtitle {
+    position: absolute;
+    top: 60px;
+    left: 18px;
+    color: #fff;
+    margin: 1em;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: small;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0);
+  }
+  
+  /* Styling for social icons */
+  .social-icon {
+    position: relative;
+    width: 2em;
+    height: 2em;
+    border-radius: 0.3em;
+    box-shadow: 2px 2px rgba(128, 128, 128, 0.5);
+    transition: 0.2s opacity ease;
+  }
+  
+  .social-icon:hover {
+    opacity: 0.4;
+  }
+  
+  /* Styling for image links */
+  .image-link {
+    top: 35px;
+    position: absolute;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Styling for hide button */
+  .hide-button {
+    position: absolute;
+    top: 35px;
+    right: 30px;
+    height: 30px;
+    background-color: rgba(128, 128, 128, 0);
+    border: none;
+    cursor: pointer;
+    transition: 0.2s opacity ease;
+  }
+  
+  .hide-button:hover {
+    opacity: 0.4;
+  }
+  
+  /* Styling for interactive boxes */
+  .project-box {
+
+    display: block;
+    position: absolute;
+
+    
+    width: auto;
+    max-width: 20%;
+    height: auto;
+    min-height: 20vh;
+    max-height: 15px;
+    
+    padding: 10px;
+    padding-bottom: 25px;
+    margin: 20px;
+
+    border: 2px solid #222;
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 0.2);
+
+    color: #ffffff;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+    word-wrap: normal;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1);
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.4s ease-out;
+  }
+
+  .project-box:hover { 
+    border-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .project-box.show {
+    opacity: 0;
+    visibility: visible;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit; 
+  }
+  
+  .project-box 
+  h1 {
+    font-size: medium;
+    padding-bottom: 5px;
+    width: auto;
+    border-bottom: 1px solid transparent;
+    border-image: linear-gradient(to left, #ff8a00, #e52e71);
+    border-image-slice: 0;
+  }
+  h2 {
+    flex: 1;
+    position: relative;
+    padding: 5px;
+    font-size: smaller;
+    font-weight: lighter;
+    text-overflow: ellipsis; 
+    white-space: wrap;
+    }   
+  footer {
+    flex-shrink: 0;
+    position: relative;
+    padding: 5px;
+    bottom: 5px;
+    font-size:smaller;
+    opacity: 0.5;
+    text-align: right;
+  }
+
+  #pbmain {
+    max-width: 25%;
+    }
+  #pbmain h1 {
+    border-image: radial-gradient(#000000, #b6b6b6);
+    border-image-slice: 1;
+    }
+  
+  #pbmain2 {
+    max-width: 25%;
+    }
+  #pbmain2 h1 {
+    border-image: radial-gradient(#000000, #b6b6b6);
+    border-image-slice: 1;
+    }
+
+  #pbwildfire h1 {
+    border-image: linear-gradient(to left, #ff8a00, #5fe52e);
+    border-image-slice: 1;
+  }
+  #pbcalc h1 {
+    border-image: linear-gradient(to left, #00d0ff, #e52e71);
+    border-image-slice: 1;
+  }
+  #pbresume h1 {
+    border-image: radial-gradient(#efff14, #2ee565);
+    border-image-slice: 1;
+  }
+
+  .strikethrough-text {
+    text-decoration: line-through;
+  }

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content=""/>
+    <meta property="og:description" content="Deploy in a VR Headset for the full experience." />
+    <meta property="og:type" content="website" />
+
+    <title>MCVLIX Homepage</title>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+    <script type="module" src="./script.js"></script>
+    <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+    <div>
+        <h1 class="header-text">MAXWELL CALIXTO</h1>
+        <h2 class="header-subtitle">SciCAM 4+1 Student & SET Research Assistant @ UC Santa Cruz - marcinas@ucsc.edu</h2>
+
+        <!-- Image links -->
+        <a class="image-link" href="https://linkedin.com/in/mcvlix" style="left: 320px;">
+            <img class="social-icon" src="docs/assets/linkedin-1867b072.svg" alt="GitHub">
+        </a>
+        <a class="image-link" href="https://discord.gg/yzxh5RyfS2" style="left: 360px;">
+            <img class="social-icon" src="docs/assets/discord-fe9442a0.svg" alt="Discord">
+        </a>
+        <a class="image-link" href="https://github.com/mcvlix" style="left: 400px;">
+            <img class="social-icon" src="docs/assets/github-1529d586.svg" alt="GitHub">
+        </a>
+
+        <div class="project-box" id="pbmain" style="top: 10%; left: 2px" onclick="toggleProjectBoxes()">
+            <h1>Welcome to my page. </h1>
+            <h2> I am currently pursing the Scientific Computing + Applied Math Bachelor-Masters' (SciCAM 4+1) Program at UCSC. My passion is in 
+                creating interactive software and data visualizations for complex topics in STEM and Economics. 
+            </h2>
+            <h2>
+                For the future, I am challenging myself in topics I believe in: Applications of numerical solutions, stochastic modeling, and deep learning in high-performance computing (HPC).
+            </h2>
+            <h2>
+                I am actively involved in Slug Fund Investment Group (SFIG), and the AI Application development certificate program @ UCSC Silicon Valley Extension.
+            </h2>
+            <footer>Click to hide/show projects.</footer>
+        </div>
+
+        <div class="project-box" id="pbmain2" style="top: 10%; right: 2px">
+            <h1>Dini's Surface: A Template Visualization</h1>
+            <h2> 
+                A Javascript visualization of a parametric curve known as Dini's surface. This render serves as an
+                exercise to template future projects with the greater goal of demystifying and appreciating theoretical concepts using OpenGL shading algorithms (GLSL.) 
+            </h2>
+            <h2>
+                Dini's surface is defined as \( f(u,v): \mathbb{R}^2 \rightarrow \mathbb{R}^3 \) with parameters \( a \) describing the radius and \( b \) describing the vertical scale.
+                <p>
+                    \[
+                    \ x=a\cos u \sin v, y=a\sin u \sin v, 
+                    \ z = a \left(\cos v + \ln \tan \frac{v}{2} \right) + bu
+                    \]
+                </p>
+
+                In this animation, \( u \) (upper bound for the surface integral) is time-animated using a sine function and \( a \) (radius) in a similar fashion. 
+                The 'web-like' look exists to portray the discretization of input values (the base mesh is a 100x100 plane.)
+            </h2>
+            <h2>
+                Stay tuned for more in-depth visualization projects!
+            </h2>
+            <footer>
+
+            </footer>
+        </div>
+
+        <div class="project-box" id="pbcalc" style="top: 36%; left: 2px">
+            <h1>3D Graphing Calculator in VR (SET LAB)</h1>
+            <h2>
+                With my involvement in the SET (Social and Emotional Tech) Lab, one prospect is MVP design for a 3D graphing calculator in Virtual Reality. 
+            </h2>
+            <h2>
+                The project will use knowledge in linear algebra, UI fundamentals, shader programming (in GLSL) and Javascript framework to test viability for such a tool.
+            </h2> 
+            <h2>
+                What are the applications of collaborative VR environments in mathematics, engineering and education?
+            </h2>
+            <footer>Fall 2024 - Present</footer>      
+        </div> 
+        <div class="project-box" id="pbwildfire" style="top: 62%; left: 2px">
+            <h1>Wildfire Harm Mitigation Project (SET LAB)</h1>
+            <h2>I am contributing to a VR project focused on geospatial data visualization to enhance wildfire treatment protocol in a collaborative environment. 
+                My role is particularly in user interactivity and adding time-sensitive mechanics to car and street data.</h2>
+            <footer>Spring 2024 - Present</footer>      
+        </div> 
+
+        <a href="https://github.com/meanderson65/AISV.X400.ClassProject" style="text-decoration: none; color: inherit;" target="_blank">
+            <div class="project-box" id="pbresume" style="top: 36%; left: 420px">
+                <h1>
+                        Resume Classifier ML Model
+                    </a>
+                </h1>
+                <h2>
+                    Contribution to a Bayesian classifier using NLP to create a model that will predict the role an applicant is best suit for based off of resume text data. This project is one of many for UCSC Silicon Valley Extension's AI App Dev program.
+                </h2>
+                <h2>
+                    One struggle was training with an unbalanced dataset, which is very common in ML. 
+                    I tested different variations of the model with varying categories and did analysis on performance metrics using scikit-learn.
+                </h2>
+                <footer>June - Aug 2024</footer>      
+            </div> 
+        </a>
+            
+        <script>
+            function toggleProjectBoxes() {
+                var projectboxes = document.querySelectorAll('.project-box');
+                projectboxes.forEach(function(box) {
+                    if (box.id != 'pbmain')
+                        box.classList.toggle('show');
+                });
+            }
+        </script>
+    </div>
+
+    <canvas class="webgl"></canvas>
+    
+
+</body>
+</html>

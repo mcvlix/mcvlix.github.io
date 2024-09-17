@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content=""/>
+    <meta property="og:description" content="Deploy in a VR Headset for the full experience." />
+    <meta property="og:type" content="website" />
+
+    <title>MCVLIX Homepage</title>
+
+    
+    
+
+  <script type="module" crossorigin src="./assets/index-e7927073.js"></script>
+  <link rel="stylesheet" href="./assets/index-63e21ae4.css">
+</head>
+<body>
+    <div>
+        <h1 class="header-text">MAXWELL CALIXTO</h1>
+        <h2 class="header-subtitle">SET Research Assistant + Applied Math @ UC Santa Cruz</h2>
+
+        <!-- Image links -->
+        <a class="image-link" href="https://linkedin.com/in/mcvlix" style="left: 320px;">
+            <img class="social-icon" src="./assets/linkedin-1867b072.svg" alt="GitHub">
+        </a>
+        <a class="image-link" href="https://discord.gg/yzxh5RyfS2" style="left: 360px;">
+            <img class="social-icon" src="./assets/discord-fe9442a0.svg" alt="Discord">
+        </a>
+        <a class="image-link" href="https://github.com/mcvlix" style="left: 400px;">
+            <img class="social-icon" src="./assets/github-1529d586.svg" alt="GitHub">
+        </a>
+
+        <div id="overlay" style="top: 12%;">
+            <div class="project-box" id="pbmain" style="left: 2px" onclick="toggleProjectBoxes()">
+                <h1>Welcome to my page. </h1>
+                <h2> I am an undergraduate in pursuit of a Scientific Computing and Applied Math (SciCAM) Masters' at UCSC. My passion is in 
+                    <span class="strikethrough-text">overloading GPUs</span>
+                    engineering interactive software and visuals for complex topics in STEM and Economics.</h2>
+                <h2>I am also a visual media hobbyist and aspire in building a personal brand under the name of my online tag: MCVLIX COLLECTIVE.</h2>
+                <footer>Click to hide/show projects.</footer>
+            </div>
+            <div class="project-box" id="pbcalc" style="top: auto; left: 2px">
+                <h1>3D Graphing Calculator in Virtual Reality</h1>
+                <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.</h2>
+                <footer>Fall 2024 - Present</footer>      
+            </div> 
+            <div class="project-box" id="pbwildfire" style="top: auto; left: 2px">
+                <h1>Wildfire Harm Mitigation Project (SET LAB)</h1>
+                <h2>Under the supervision of PhD student Samir Ghosh, I am contributing to a VR project focused on geospatial data visualization to enhance wildfire treatment protocol in a collaborative environment. My role is specialized in user interactivity.</h2>
+                <footer>Spring 2024 - Present</footer>      
+            </div> 
+
+        </div>
+            
+        <script>
+            function toggleProjectBoxes() {
+                var projectboxes = document.querySelectorAll('.project-box');
+                projectboxes.forEach(function(box) {
+                    if (box.id != 'pbmain')
+                        box.classList.toggle('show');
+                });
+            }
+        </script>
+
+        <canvas class="webgl"></canvas>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+
+<button class="hide-button" onclick="toggleImageLinks()">
+    <img src="docs/assets/menubutton-44174f37.svg" alt="Image">
+</button>
+
+<script>
+    function toggleImageLinks() {
+        var imageLinks = document.querySelectorAll('.image-link');
+        imageLinks.forEach(function(link) {
+            if (link.style.display !== 'none') {
+                link.style.display = 'none';
+            } else {
+                link.style.display = 'inline-block';
+            }
+        });
+    }
+</script>
