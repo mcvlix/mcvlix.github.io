@@ -13,7 +13,7 @@ export default {
     },
     build:
     {
-        outDir: '../docs',
+        outDir: './docs',
         emptyOutDir: true,
         sourcemap: true
     },
