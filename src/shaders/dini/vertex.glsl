@@ -14,7 +14,6 @@ void main()
 
     float a = width * sin(uTime * 0.0002);
     float b = 0.2;
-
     float u = 
         vPosition.x 
         * totalRadians * PI 
