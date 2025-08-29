@@ -5,20 +5,18 @@ const isCodeSandbox = 'SANDBOX_URL' in process.env || 'CODESANDBOX_HOST' in proc
 export default {
     root: './',
     publicDir: '../static/',
-    base: './',
-    server:
-    {
-        host: true,
-        open: !isCodeSandbox // Open if it's not a CodeSandbox
+    base: '/mcvlix.github.io/',
+    server: {
+      host: true,
+      open: !isCodeSandbox
     },
-    build:
-    {
-        outDir: './docs',
-        emptyOutDir: true,
-        sourcemap: true
+    build: {
+      outDir: './docs',
+      emptyOutDir: true,
+      sourcemap: true
     },
-    plugins:
-    [
-        glsl()
+    plugins: [
+      glsl()
     ]
-}
+  }
+  
