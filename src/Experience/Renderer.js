@@ -15,6 +15,9 @@ export default class Renderer {
     this.instance = new THREE.WebGLRenderer({
       canvas: this.canvas,
       antialias: true,
+      powerPreference: "high-performance", 
+      stencil: false,      
+      depth: true 
     });
     this.instance.toneMapping = THREE.CineonToneMapping;
     this.instance.toneMappingExposure = 1.75

@@ -29,7 +29,6 @@ export default class Camera {
   setOrbitControls() {
     this.controls = new OrbitControls(this.instance, this.canvas);
     this.controls.enableDamping = true;
-    this.controls.target = new THREE.Vector3(0, 1, 1);
     this.controls.target = new THREE.Vector3(0, 0, 0);
   }
 
@@ -39,6 +38,7 @@ export default class Camera {
   }
   update() {
     this.controls.update();
-  }
-
+    this.radius = this.instance.position.distanceTo(this.controls.target);
+    }
+  
 }

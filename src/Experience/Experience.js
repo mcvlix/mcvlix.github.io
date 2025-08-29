@@ -9,7 +9,6 @@ import Renderer from "./Renderer.js";
 import World from "./World/World.js";
 import sources from "./sources.js";
 
-import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 import Controllers from "./Controllers.js";
 
 
@@ -65,8 +64,6 @@ export default class Experience {
     this.clock = new THREE.Clock();
     this.clock.start();
 
-    this.renderer.instance.xr.enabled = true;
-    document.body.appendChild(VRButton.createButton(this.renderer.instance));
     this.renderer.instance.setAnimationLoop(() => {
       this.time.tick();
       this.world.update();
@@ -105,6 +102,13 @@ export default class Experience {
     })
     
     this.currentIntersect = null;
+
+    this.rotationStartTime = null;
+    this.rotationDuration = 3000; // 3 seconds to slow down (in milliseconds)
+    this.initialRotationSpeed = -0.02; // Fast initial speed
+    this.targetRotationSpeed = -0.0001; // Slow target speed
+    this.initRadius = 10;
+    this.radius = this.initRadius;
   }
 
   resize() {
@@ -115,6 +119,36 @@ export default class Experience {
   update() {
     this.camera.update();
     this.world.update();
+  
+    // Initialize once
+    if (this.angle === undefined) this.angle = 0;
+    if (this.rotationStartTime === null) {
+      this.rotationStartTime = this.time.elapsed;
+    }
+
+    const elapsed = this.time.elapsed - this.rotationStartTime;
+    const progress = Math.min(elapsed / this.rotationDuration, 1);
+
+    // Ease-out cubic
+    const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+
+    // Rotation speed this frame
+    const speed = this.initialRotationSpeed +
+      (this.targetRotationSpeed - this.initialRotationSpeed) * easeOutCubic;
+
+    // Accumulate angle (use delta time, not elapsed)
+    this.angle += speed * this.time.delta; // if delta is ms, divide by 1000
+
+    const offset = new THREE.Vector3(
+      Math.cos(this.angle) * this.radius, // X
+      this.camera.instance.position.y,    // keep current camera height
+      Math.sin(this.angle) * this.radius  // Z
+    );
+    
+    // Set camera position relative to target
+    this.camera.instance.position.copy(this.camera.controls.target).add(offset);
+    this.camera.instance.lookAt(this.camera.controls.target);
+
 
     //change this to be controller if controller is active
     this.raycaster.setFromCamera(this.mouse, this.camera.instance);
