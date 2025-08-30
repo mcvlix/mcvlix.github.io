@@ -5,25 +5,21 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "vite build && gh-pages -d dist"
   },
   "devDependencies": {
     "vite": "^4.5.14",
-    "vite-plugin-glsl": "^1.1.2"
+    "vite-plugin-glsl": "^1.1.2",
+    "gh-pages": "^6.0.0"
   },
   "dependencies": {
-    "ite": "^0.0.1",
     "lil-gui": "^0.17.0",
-    "teleportvr": "^3.0.4",
-    "three": "^0.148.0",
-    "three.js": "^0.77.0"
+    "three": "^0.158.0"
   },
-  "description": "![image](https://github.com/mcvlix/mcvlix.github.io/assets/141688706/6aca01bf-373f-46ae-b14e-d7fc66701b79)",
-  "main": "vite.config.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "description": "Maxwell's Portfolio - Three.js WebGL Experience",
+  "keywords": ["threejs", "webgl", "portfolio"],
+  "author": "Maxwell",
+  "license": "MIT"
 }

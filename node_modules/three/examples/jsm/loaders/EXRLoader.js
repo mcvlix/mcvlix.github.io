@@ -3,8 +3,9 @@ import {
 	DataUtils,
 	FloatType,
 	HalfFloatType,
-	LinearEncoding,
+	NoColorSpace,
 	LinearFilter,
+	LinearSRGBColorSpace,
 	RedFormat,
 	RGBAFormat
 } from 'three';
@@ -1749,11 +1750,21 @@ class EXRLoader extends DataTextureLoader {
 
 		const parseInt64 = function ( dataView, offset ) {
 
-			const Int64 = Number( dataView.getBigInt64( offset.value, true ) );
+			let int;
+
+			if ( 'getBigInt64' in DataView.prototype ) {
+
+				int = Number( dataView.getBigInt64( offset.value, true ) );
+
+			} else {
+
+				int = dataView.getUint32( offset.value + 4, true ) + Number( dataView.getUint32( offset.value, true ) << 32 );
+
+			}
 
 			offset.value += ULONG_SIZE;
 
-			return Int64;
+			return int;
 
 		};
 
@@ -1985,7 +1996,7 @@ class EXRLoader extends DataTextureLoader {
 
 			if ( dataView.getUint32( 0, true ) != 20000630 ) { // magic
 
-				throw new Error( 'THREE.EXRLoader: provided file doesn\'t appear to be in OpenEXR format.' );
+				throw new Error( 'THREE.EXRLoader: Provided file doesn\'t appear to be in OpenEXR format.' );
 
 			}
 
@@ -2022,7 +2033,7 @@ class EXRLoader extends DataTextureLoader {
 
 					if ( attributeValue === undefined ) {
 
-						console.warn( `EXRLoader.parse: skipped unknown header attribute type \'${attributeType}\'.` );
+						console.warn( `THREE.EXRLoader: Skipped unknown header attribute type \'${attributeType}\'.` );
 
 					} else {
 
@@ -2036,8 +2047,8 @@ class EXRLoader extends DataTextureLoader {
 
 			if ( ( spec & ~ 0x04 ) != 0 ) { // unsupported tiled, deep-image, multi-part
 
-				console.error( 'EXRHeader:', EXRHeader );
-				throw new Error( 'THREE.EXRLoader: provided file is currently unsupported.' );
+				console.error( 'THREE.EXRHeader:', EXRHeader );
+				throw new Error( 'THREE.EXRLoader: Provided file is currently unsupported.' );
 
 			}
 
@@ -2062,7 +2073,7 @@ class EXRLoader extends DataTextureLoader {
 				uncompress: null,
 				getter: null,
 				format: null,
-				encoding: null,
+				colorSpace: LinearSRGBColorSpace,
 			};
 
 			switch ( EXRHeader.compression ) {
@@ -2194,12 +2205,12 @@ class EXRLoader extends DataTextureLoader {
 			if ( EXRDecoder.outputChannels == 4 ) {
 
 				EXRDecoder.format = RGBAFormat;
-				EXRDecoder.encoding = LinearEncoding;
+				EXRDecoder.colorSpace = LinearSRGBColorSpace;
 
 			} else {
 
 				EXRDecoder.format = RedFormat;
-				EXRDecoder.encoding = LinearEncoding;
+				EXRDecoder.colorSpace = NoColorSpace;
 
 			}
 
@@ -2262,7 +2273,7 @@ class EXRLoader extends DataTextureLoader {
 			height: EXRDecoder.height,
 			data: EXRDecoder.byteArray,
 			format: EXRDecoder.format,
-			encoding: EXRDecoder.encoding,
+			colorSpace: EXRDecoder.colorSpace,
 			type: this.type,
 		};
 
@@ -2279,7 +2290,7 @@ class EXRLoader extends DataTextureLoader {
 
 		function onLoadCallback( texture, texData ) {
 
-			texture.encoding = texData.encoding;
+			texture.colorSpace = texData.colorSpace;
 			texture.minFilter = LinearFilter;
 			texture.magFilter = LinearFilter;
 			texture.generateMipmaps = false;
