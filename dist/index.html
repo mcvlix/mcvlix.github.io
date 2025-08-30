@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website" />
+
+    <title>Maxwell - Portfolio</title>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    
+    
+    <script type="importmap">
+    {
+        "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"
+        }
+    }
+    </script>
+  <script type="module" crossorigin src="./assets/index-0d50557c.js"></script>
+  <link rel="stylesheet" href="./assets/index-2184bca8.css">
+</head>
+<body>
+    <div class="grid-overlay"></div>
+    <div class="bg-animation"></div>
+    
+    <div class="container">
+        <!-- Main Header Box -->
+        <div class="main-box">
+            <h1 class="name">Maxwell Calixto - San Francisco, CA</h1>
+            <p class="subtitle">Applied Mathematics • Quantitative Research • GPU Programming</p>
+            
+            <h2 class="intro-title">Math, Coding, Finance, Color.</h2>
+            <p class="intro-text">
+                Math instructor with a B.S. in Applied Mathematics @ University of California, Santa Cruz. This website includes resources, information, and projects in mathematics, statistics, finance, and high-performance computing.
+            </p>
+            <p class="toggle-hint">Click to explore projects on the right.</p>
+        </div>
+
+        <!-- Project Detail Display -->
+        <div class="project-display" id="projectDisplay">
+            <div class="project-display-title">Select a Project</div>
+            <div class="project-display-description">
+                Click on any project from the right panel to see detailed information here.
+            </div>
+        </div>
+
+        <!-- Right Side Project Slider (will be populated dynamically) -->
+        <div class="project-slider">
+            <!-- Project items will be dynamically generated here -->
+        </div>
+        
+        <canvas class="webgl"></canvas>
+    </div>
+</body>
+</html>
