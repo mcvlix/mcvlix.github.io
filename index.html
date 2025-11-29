@@ -52,8 +52,8 @@
         }
     }
     </script>
-  <script type="module" crossorigin src="./assets/index-16a98d96.js"></script>
-  <link rel="stylesheet" href="./assets/index-1551e7ed.css">
+  <script type="module" crossorigin src="./assets/index-7ee1e564.js"></script>
+  <link rel="stylesheet" href="./assets/index-60d5a03b.css">
 </head>
 <body>
     <!-- Skip Link for Accessibility -->
@@ -73,9 +73,9 @@
             <span></span>
         </button>
         <ul class="nav-links" id="navLinks" role="menubar">
-            <li role="none"><a href="#about" class="nav-link" role="menuitem" aria-label="About section">About</a></li>
             <li role="none"><a href="#projects" class="nav-link" role="menuitem" aria-label="Projects section">Projects</a></li>
             <li role="none"><a href="#blogs" class="nav-link" role="menuitem" aria-label="Blogs section">Blogs</a></li>
+            <li role="none"><a href="#publications" class="nav-link" role="menuitem" aria-label="Publications section">Publications</a></li>
         </ul>
     </nav>
     
@@ -123,7 +123,7 @@
                 With deepfakes, scams, and fraud becoming more prevalent, there is all the more need for secure and transparent cryptographic systems, underneath proof-of-identity/humanity solutions. These systems must be classical computing-proof, quantum-proof, and AGI-proof. How do we develop these solutions? By basing our frameworks on the mathematical assumption that our attacker is omniscient.
 
                 <br /><br />
-                Maxwell is a Cryptography Researcher and Premium Math Instructor
+                As a Cryptography Researcher and Premium Math Instructor
                 <!-- <a href="https://www.descarteslearningclub.com/" 
                 title="Descartes Learning Club"
                 style="text-decoration: underline; color: #30acff;"
@@ -139,16 +139,16 @@
                 rel="noopener noreferrer"> -->
                 Applied Mathematics
                 
-                from The University of California, Santa Cruz. He is currently a researcher at
+                from UCSC, I currently am working at
                 <a href="https://www.eni6ma.org/" 
                 title="ENI6MA Lab"
                 style="text-decoration: underline; color: #30acff;"
                 target="_blank" 
                 rel="noopener noreferrer">
                 ENI6MA</a> 
-                alongside Dylan Rosario, researching the math behind and implementing completely new Zero-Knowledge Proof (ZKP) encryption algorithms. He plans to complete his doctorate research in this field. 
+                alongside Dylan Rosario. We are developing the math behind and implementing completely new Zero-Knowledge Proof (ZKP) encryption algorithms. I plan to complete my doctorate research expanding on the Rosario-Wang proofs. 
             </p>
-            <p class="toggle-hint">Click on 'projects' or 'blogs' to explore more.</p>
+            <p class="toggle-hint">Refer to the top right corner for navigation.</p>
         </section>
 
         <!-- Projects Section -->
@@ -216,6 +216,41 @@
                 <div class="project-slider" id="blogSlider" role="list" aria-label="Blogs list">
                     <div class="project-items-container" id="blogsContainer" role="list" aria-label="Blogs list">
                         <!-- Blog items will be dynamically generated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Publications Section -->
+        <section id="publications" aria-labelledby="publications-heading">
+            <h2 id="publications-heading" class="sr-only">Publications</h2>
+            
+            <!-- Publication Detail Display -->
+            <div class="project-display" id="publicationDisplay" role="region" aria-live="polite" aria-label="Publication details">
+                <div class="project-display-title">Select a Publication</div>
+                <div class="project-display-description">
+                    Click on any publication from the right panel to see detailed information here.
+                </div>
+            </div>
+
+            <!-- Publications Catalog Container (for responsive layout) -->
+            <div class="projects-catalog-container">
+                <!-- Publication Filters and Search -->
+                <div class="project-controls" id="publicationControls">
+                    <div class="project-filters" id="publicationFilters" role="group" aria-label="Publication filters">
+                        <!-- Filter buttons will be dynamically generated -->
+                    </div>
+                    <input type="text" 
+                           class="project-search" 
+                           id="publicationSearch" 
+                           placeholder="Search publications..." 
+                           aria-label="Search publications">
+                </div>
+
+                <!-- Publication Slider (will be populated dynamically) -->
+                <div class="project-slider" id="publicationSlider" role="list" aria-label="Publications list">
+                    <div class="project-items-container" id="publicationsContainer" role="list" aria-label="Publications list">
+                        <!-- Publication items will be dynamically generated here -->
                     </div>
                 </div>
             </div>
