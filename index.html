@@ -3,10 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:title" content=""/>
+    <meta name="description" content="Maxwell Calixto - Cryptography Researcher and Applied Mathematics specialist working on Zero-Knowledge Proof algorithms at ENI6MA lab.">
+    <meta name="keywords" content="cryptography, zero-knowledge proofs, applied mathematics, research, portfolio">
+    <meta name="author" content="Maxwell Calixto">
+    
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:title" content="Maxwell Calixto - Portfolio"/>
+    <meta property="og:description" content="Cryptography Researcher and Applied Mathematics specialist working on Zero-Knowledge Proof algorithms."/>
+    <meta property="og:url" content="https://mcvlix.github.io/"/>
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="Maxwell Calixto - Portfolio"/>
+    <meta name="twitter:description" content="Cryptography Researcher and Applied Mathematics specialist working on Zero-Knowledge Proof algorithms."/>
 
-    <title>Maxwell - Portfolio</title>
+    <title>Maxwell Calixto - Portfolio | Cryptography Research & Applied Mathematics</title>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Maxwell Calixto",
+        "jobTitle": "Cryptography Researcher",
+        "alumniOf": {
+            "@type": "EducationalOrganization",
+            "name": "University of California, Santa Cruz"
+        },
+        "memberOf": {
+            "@type": "Organization",
+            "name": "ENI6MA Lab"
+        },
+        "url": "https://mcvlix.github.io"
+    }
+    </script>
 
 
 
@@ -21,56 +52,191 @@
         }
     }
     </script>
-  <script type="module" crossorigin src="./assets/index-7a072b3d.js"></script>
-  <link rel="stylesheet" href="./assets/index-8b2617cf.css">
+  <script type="module" crossorigin src="./assets/index-16a98d96.js"></script>
+  <link rel="stylesheet" href="./assets/index-1551e7ed.css">
 </head>
 <body>
-    <div class="grid-overlay"></div>
-    <div class="bg-animation"></div>
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     
-    <div class="container">
-        <!-- Main Header Box -->
-        <div class="main-box">
-            <h1 class="name">Maxwell Calixto - San Francisco, CA</h1>
-            <p class="subtitle">Applied Mathematics • HPC & GPU Programming</p>
+    <!-- Progress Indicator -->
+    <div class="progress-indicator" id="progressIndicator"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="nav-bar" id="navBar" role="navigation" aria-label="Main navigation">
+        <div class="nav-logo">
+            <a href="#about" class="nav-link">Maxwell Calixto</a>
+        </div>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-links" id="navLinks" role="menubar">
+            <li role="none"><a href="#about" class="nav-link" role="menuitem" aria-label="About section">About</a></li>
+            <li role="none"><a href="#projects" class="nav-link" role="menuitem" aria-label="Projects section">Projects</a></li>
+            <li role="none"><a href="#blogs" class="nav-link" role="menuitem" aria-label="Blogs section">Blogs</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Background Elements -->
+    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="bg-animation" aria-hidden="true"></div>
+    
+    <!-- Main Content -->
+    <main class="container" id="main-content" role="main">
+        <!-- Main Header Box / About Section -->
+        <section class="main-box" id="about" aria-labelledby="about-heading">
+            <div class="name-container">
+                <h1 class="name">Maxwell Calixto</h1>
+                <div class="contact-icons">
+                    <a href="mailto:mcalixto.contact@gmail.com" class="contact-icon email-icon" title="mcalixto.contact@gmail.com" aria-label="Email: mcalixto.contact@gmail.com">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/yourprofile" class="contact-icon" title="LinkedIn" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                    </a>
+                    <a href="https://github.com/mcvlix" class="contact-icon" title="GitHub" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                    </a>
+                    <a href="https://www.eni6ma.org/" class="contact-icon" title="ENI6MA Lab" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="4" width="16" height="16" rx="1.5" ry="1.5"></rect>
+                            <path d="M12 8.5c-1.5 0-2.5 0.8-2.5 2s1 2 2.5 2c1.5 0 2.5-0.8 2.5-2s-1-2-2.5-2z" fill="currentColor"/>
+                            <path d="M12 8.5v7" stroke-linecap="round"/>
+                            <path d="M9.5 13.5c0 1.2 1 2 2.5 2s2.5-0.8 2.5-2" stroke-linecap="round"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <p class="subtitle"></p>
             
-            <h2 class="intro-title">Math, Coding, Performance, Color.</h2>
+            <h2 class="intro-title" id="about-heading">Cryptography Research & Applied Mathematics</h2>
             <p class="intro-text">
-                Maxwell is a researcher and premium math instructor at 
-                <a href="https://www.descarteslearningclub.com/" 
+                With deepfakes, scams, and fraud becoming more prevalent, there is all the more need for secure and transparent cryptographic systems, underneath proof-of-identity/humanity solutions. These systems must be classical computing-proof, quantum-proof, and AGI-proof. How do we develop these solutions? By basing our frameworks on the mathematical assumption that our attacker is omniscient.
+
+                <br /><br />
+                Maxwell is a Cryptography Researcher and Premium Math Instructor
+                <!-- <a href="https://www.descarteslearningclub.com/" 
                 title="Descartes Learning Club"
                 style="text-decoration: underline; color: #30acff;"
                 target="_blank" 
-                rel="noopener noreferrer">
-                Descartes Learning Club</a>,
+                rel="noopener noreferrer"> -->
+                <!-- Descartes Learning Club</a>, -->
                 
                 with a B.S. in 
-                <a href="https://engineering.ucsc.edu/departments/applied-mathematics/" 
+                <!-- <a href="https://engineering.ucsc.edu/departments/applied-mathematics/" 
                 title="Applied Mathematics"
                 style="text-decoration: underline; color: #30acff;"
                 target="_blank" 
-                rel="noopener noreferrer">
-                Applied Mathematics</a>
+                rel="noopener noreferrer"> -->
+                Applied Mathematics
                 
-                from the University of California, Santa Cruz. This website includes resources, information, and projects in GPU-accelerated algorithms, high-performance simulations, and mathematical modeling.
+                from The University of California, Santa Cruz. He is currently a researcher at
+                <a href="https://www.eni6ma.org/" 
+                title="ENI6MA Lab"
+                style="text-decoration: underline; color: #30acff;"
+                target="_blank" 
+                rel="noopener noreferrer">
+                ENI6MA</a> 
+                alongside Dylan Rosario, researching the math behind and implementing completely new Zero-Knowledge Proof (ZKP) encryption algorithms. He plans to complete his doctorate research in this field. 
             </p>
-            <p class="toggle-hint">Click this box to explore projects.</p>
-        </div>
+            <p class="toggle-hint">Click on 'projects' or 'blogs' to explore more.</p>
+        </section>
 
-        <!-- Project Detail Display -->
-        <div class="project-display" id="projectDisplay">
-            <div class="project-display-title">Select a Project</div>
-            <div class="project-display-description">
-                Click on any project from the right panel to see detailed information here.
+        <!-- Projects Section -->
+        <section id="projects" aria-labelledby="projects-heading">
+            <h2 id="projects-heading" class="sr-only">Projects</h2>
+            
+            <!-- Project Detail Display -->
+            <div class="project-display" id="projectDisplay" role="region" aria-live="polite" aria-label="Project details">
+                <div class="project-display-title">Select a Project</div>
+                <div class="project-display-description">
+                    Click on any project from the right panel to see detailed information here.
+                </div>
             </div>
-        </div>
 
-        <!-- Right Side Project Slider (will be populated dynamically) -->
-        <div class="project-slider">
-            <!-- Project items will be dynamically generated here -->
-        </div>
+            <!-- Projects Catalog Container (for responsive layout) -->
+            <div class="projects-catalog-container">
+                <!-- Project Filters and Search -->
+                <div class="project-controls" id="projectControls">
+                    <div class="project-filters" id="projectFilters" role="group" aria-label="Project filters">
+                        <!-- Filter buttons will be dynamically generated -->
+                    </div>
+                    <input type="text" 
+                           class="project-search" 
+                           id="projectSearch" 
+                           placeholder="Search projects..." 
+                           aria-label="Search projects">
+                </div>
+
+                <!-- Project Slider (will be populated dynamically) -->
+                <div class="project-slider" id="projectSlider" role="list" aria-label="Projects list">
+                    <div class="project-items-container" id="projectsContainer" role="list" aria-label="Projects list">
+                        <!-- Project items will be dynamically generated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blogs Section -->
+        <section id="blogs" aria-labelledby="blogs-heading">
+            <h2 id="blogs-heading" class="sr-only">Blogs</h2>
+            
+            <!-- Blog Detail Display -->
+            <div class="project-display" id="blogDisplay" role="region" aria-live="polite" aria-label="Blog details">
+                <div class="project-display-title">Select a Blog</div>
+                <div class="project-display-description">
+                    Click on any blog from the right panel to see detailed information here.
+                </div>
+            </div>
+
+            <!-- Blogs Catalog Container (for responsive layout) -->
+            <div class="projects-catalog-container">
+                <!-- Blog Filters and Search -->
+                <div class="project-controls" id="blogControls">
+                    <div class="project-filters" id="blogFilters" role="group" aria-label="Blog filters">
+                        <!-- Filter buttons will be dynamically generated -->
+                    </div>
+                    <input type="text" 
+                           class="project-search" 
+                           id="blogSearch" 
+                           placeholder="Search blogs..." 
+                           aria-label="Search blogs">
+                </div>
+
+                <!-- Blog Slider (will be populated dynamically) -->
+                <div class="project-slider" id="blogSlider" role="list" aria-label="Blogs list">
+                    <div class="project-items-container" id="blogsContainer" role="list" aria-label="Blogs list">
+                        <!-- Blog items will be dynamically generated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
         
-        <canvas class="webgl"></canvas>
+        
+        <!-- WebGL Canvas -->
+        <canvas class="webgl" aria-hidden="true"></canvas>
+    </main>
+    
+    <!-- Floating Action Button (Scroll to Top) -->
+    <button class="fab" id="scrollToTop" aria-label="Scroll to top" title="Scroll to top" style="display: none;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"></path>
+        </svg>
+    </button>
+    
+    <!-- Command Palette (Hidden by default) -->
+    <div class="command-palette" id="commandPalette" role="dialog" aria-label="Command palette" aria-hidden="true">
+        <input type="text" class="command-palette-input" id="commandInput" placeholder="Type to search..." aria-label="Command input">
+        <div class="command-palette-results" id="commandResults" role="listbox"></div>
     </div>
 </body>
 </html>
