@@ -1,0 +1,103 @@
+/* CSS Custom Properties - Design System */
+
+:root {
+    /* Spacing Scale */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-base: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+    --spacing-3xl: 64px;
+
+    /* Typography Scale (1.2 ratio) */
+    --font-size-xs: 0.75rem;      /* 12px */
+    --font-size-sm: 0.875rem;    /* 14px */
+    --font-size-base: 1rem;      /* 16px */
+    --font-size-md: 1.125rem;    /* 18px */
+    --font-size-lg: 1.25rem;     /* 20px */
+    --font-size-xl: 1.5rem;      /* 24px */
+    --font-size-2xl: 2rem;       /* 32px */
+    --font-size-3xl: 2.5rem;     /* 40px */
+
+    /* Line Heights */
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.6;
+    --line-height-loose: 1.8;
+
+    /* Letter Spacing */
+    --letter-spacing-tight: -0.02em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.05em;
+    --letter-spacing-wider: 0.1em;
+    --letter-spacing-widest: 0.15em;
+
+    /* Colors */
+    --color-bg-primary: #0a0a0a;
+    --color-bg-secondary: rgba(0, 0, 0, 0.2);
+    --color-text-primary: #ffffff;
+    --color-text-secondary: rgba(255, 255, 255, 0.7);
+    --color-text-tertiary: rgba(255, 255, 255, 0.5);
+    --color-border-default: #222;
+    --color-border-hover: #ffffff;
+    --color-link: #30acff;
+    --color-link-hover: #60c0ff;
+    --color-mint: #CCFFCC;
+    --color-mint-dark: #99FF99;
+
+    /* Gradients - Theme Colors */
+    --gradient-primary: radial-gradient(#ffffff, #90d5ff);
+    --gradient-secondary: linear-gradient(to right, #ff3a30, #306eff);
+    --gradient-accent: conic-gradient(from 0deg, #ff0000 0deg, #ffff00 90deg, #00ff00 180deg, rgb(86, 71, 255) 270deg, #ff0000 360deg);
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.1);
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.3s ease;
+    --transition-slow: 0.4s ease-out;
+    --transition-slower: 0.6s ease-out;
+
+    /* Border Radius */
+    --radius-none: 0px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Z-Index Scale */
+    --z-background: -2;
+    --z-bg-animation: -1;
+    --z-base: 0;
+    --z-content: 1;
+    --z-overlay: 10;
+    --z-modal: 100;
+    --z-tooltip: 200;
+
+    /* Glassmorphism */
+    --glass-bg: rgba(0, 0, 0, 0.2);
+    --glass-blur: blur(10px);
+    --glass-border: rgba(255, 255, 255, 0.1);
+
+    /* Breakpoints (for reference, use in media queries) */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --transition-fast: 0s;
+        --transition-base: 0s;
+        --transition-slow: 0s;
+        --transition-slower: 0s;
+    }
+}
+

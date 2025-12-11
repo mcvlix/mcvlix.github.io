@@ -1,0 +1,29 @@
+{
+  "name": "mcvlix-github-pages",
+  "private": false,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "vite build && gh-pages -d dist"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.0.0",
+    "vite": "^6.4.1",
+    "vite-plugin-glsl": "^1.5.5"
+  },
+  "dependencies": {
+    "lil-gui": "^0.17.0",
+    "three": "^0.158.0"
+  },
+  "description": "Maxwell's Portfolio - Three.js WebGL Experience",
+  "keywords": [
+    "threejs",
+    "webgl",
+    "portfolio"
+  ],
+  "author": "Maxwell",
+  "license": "MIT"
+}
