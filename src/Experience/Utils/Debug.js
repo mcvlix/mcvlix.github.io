@@ -14,4 +14,4 @@ export default class Debug
             this.ui = new dat.GUI()
         }
     }
-}
+  }

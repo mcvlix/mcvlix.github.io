@@ -1,45 +1,5 @@
 export const blogs = [
-    {
-        id: "rosario-wang-cypher",
-        title: "The Rosario-Wang Cypher",
-        summary: "Mathematically proven security, quantum entropy, and the human mind as a key...",
-        description: `
-            A valid user holds a secret (set of strings/passwords), and a private bijective map. Similar to how the brain can create abstract assocations (i.e., friends with movie characters, blue with mathematics), the bijective map is a clever encoding. For the simple cypher, we use the six cardinal directions in 3D (up, down, left, right, forward, backward) and six colors (red, green, blue, yellow, black, white). 
-
-            <br /><br />
-
-            Simple enough, right? This is actually enough to create a statistically uniform, quantum-proof, cryptographic system. Refer to the
-                <a href="https://circuit.eni6ma.io/"
-                title="ENI6MA Circuit Interface"
-                style="text-decoration: underline;"
-                target="_blank"
-                rel="noopener noreferrer">
-                circuit demonstration</a> for this cypher.
-                
-               The user searches for the first character of any secret, and finds what ring it lies within, and the color of the leaf it lies on. Their input is then transformed by the private bijection, meaning the user inputs the encrypted cardinal direction that corresponds to the character. The rings spin and the user repeats. Once the user iterates through the circuit and fully inputted a valid secret, they are allowed into the system.
-               
-               <br /><br />
-
-                               <a href="https://setup.eni6ma.io/"
-                title="ENI6MA Circuit Interface"
-                style="text-decoration: underline;"
-                target="_blank"
-                rel="noopener noreferrer">
-                This setup demonstration</a> shows how a user may create their own secrets and private bijection. Mathematically, this information is sufficient for an attacker to have no advantage over the user. This is a key finding of the
-
-
-                <a href="https://www.eni6ma.io/documentation/gitbook/the-eni6ma-cypher-rosario-wang-proof/overview-of-rosario-wang-proof.md"
-                title="ENI6MA Circuit Interface"
-                style="text-decoration: underline;"
-                target="_blank"
-                rel="noopener noreferrer">
-                Rosario-Wang Proof</a>, as the information is stored in a higher-dimensional space that cannot be deterministically derived from simply observing the user's inputs.
-        `,
-        tags: "Cryptography • Information Theory • Research",
-        date: "October 2025 - Today",
-        gradient: "conic-gradient(from 0deg, #ff0000 0deg, #ffff00 90deg, #00ff00 180deg,rgb(86, 71, 255) 270deg, #ff0000 360deg)"
-    },
-    {
+        {
         id: "language-group-theory",
         title: "The Group Theory Behind Language Construction",
         summary: "The formal definition for algebraic structures, alphabets, and language construction under the RWPs...",
@@ -107,6 +67,166 @@ export const blogs = [
         gradient: "conic-gradient(from 0deg, #ff0000 0deg, #ffff00 90deg, #00ff00 180deg,rgb(86, 71, 255) 270deg, #ff0000 360deg)"
     },
     {
+        id: "rosario-wang-cypher",
+        title: "The Rosario-Wang Cypher",
+        summary: "Mathematically proven security, quantum entropy, and the human mind as a key...",
+        description: `
+            A valid user holds a secret (set of strings/passwords), and a private bijective map. Similar to how the brain can create abstract assocations (i.e., friends with movie characters, blue with mathematics), the bijective map is a clever encoding. For the simple cypher, we use the six cardinal directions in 3D (up, down, left, right, forward, backward) and six colors (red, green, blue, yellow, black, white). 
+
+            <br /><br />
+
+            Simple enough, right? This is actually enough to create a statistically uniform, quantum-proof, cryptographic system. Refer to the
+                <a href="https://circuit.eni6ma.io/"
+                title="ENI6MA Circuit Interface"
+                style="text-decoration: underline;"
+                target="_blank"
+                rel="noopener noreferrer">
+                circuit demonstration</a> for this cypher.
+                
+               The user searches for the first character of any secret, and finds what ring it lies within, and the color of the leaf it lies on. Their input is then transformed by the private bijection, meaning the user inputs the encrypted cardinal direction that corresponds to the character. The rings spin and the user repeats. Once the user iterates through the circuit and fully inputted a valid secret, they are allowed into the system.
+               
+               <br /><br />
+
+                               <a href="https://setup.eni6ma.io/"
+                title="ENI6MA Circuit Interface"
+                style="text-decoration: underline;"
+                target="_blank"
+                rel="noopener noreferrer">
+                This setup demonstration</a> shows how a user may create their own secrets and private bijection. Mathematically, this information is sufficient for an attacker to have no advantage over the user. This is a key finding of the
+
+
+                <a href="https://www.eni6ma.io/documentation/gitbook/the-eni6ma-cypher-rosario-wang-proof/overview-of-rosario-wang-proof.md"
+                title="ENI6MA Circuit Interface"
+                style="text-decoration: underline;"
+                target="_blank"
+                rel="noopener noreferrer">
+                Rosario-Wang Proof</a>, as the information is stored in a higher-dimensional space that cannot be deterministically derived from simply observing the user's inputs.
+        `,
+        tags: "Cryptography • Information Theory • Research",
+        date: "October 2025 - Today",
+        gradient: "conic-gradient(from 0deg, #ff0000 0deg, #ffff00 90deg, #00ff00 180deg,rgb(86, 71, 255) 270deg, #ff0000 360deg)"
+    },
+
+
+//     {
+//         title: "Information Theory Intro",
+//         summary: "A preview of the key concepts and theorems in information theory...",
+//         type: "md",
+//         description: `# Elements of Information Theory - Chapter 1: Introduction & Preview
+
+// **Summary based on Thomas M. Cover & Joy A. Thomas**
+
+// ## 1. Introduction
+// Information theory answers two fundamental questions in communication theory:
+// 1.  **What is the ultimate data compression?** (The limit is the **Entropy** $H$).
+// 2.  **What is the ultimate transmission rate of communication?** (The limit is the **Channel Capacity** $C$).
+
+// Proposed by **Claude Shannon** in his 1948 landmark paper "A Mathematical Theory of Communication," this theory defines rigorous mathematical limits on communication, independent of the technologies used.
+
+// ---
+
+// ## 2. The Communication System Model
+
+// Information theory models all communication systems with a unified block diagram:
+// $$ \\mathrm{Source} \\to \\text{Encoder} \\to \\text{Channel} \\to \\text{Decoder} \\to \\text{Destination} $$
+
+// *   **Source**: Produces the message $W$.
+// *   **Encoder**: Maps $W$ to a signal $X^n$ suitable for the channel.
+// *   **Channel**: Adds noise, mapping $X^n \\to Y^n$ according to a conditional probability distribution $p(y|x)$.
+// *   **Decoder**: Estimates the message $\\hat{W}$ from $Y^n$.
+// *   **Goal**: To make the probability of error $P(\\hat{W} \\neq W)$ arbitrarily small.
+
+// ---
+
+// ## 3. Fundamental Measures of Information
+
+// Chapter 1 previews the key quantities that quantify "information."
+
+// ### 3.1 Entropy ($H$)
+// Entropy is a measure of the **uncertainty** of a single random variable.
+// *   Let $X$ be a discrete random variable with probability mass function $p(x)$.
+// *   **Definition**: $H(X) = - \\sum_{x \\in \\mathcal{X}} p(x) \\log p(x)$.
+// *   **Interpretation**: The average number of bits required to describe the random variable $X$.
+// *   **Properties**:
+//     *   $H(X) \\ge 0$.
+//     *   $H(X)$ is maximized when $p(x)$ is uniform.
+
+// ### 3.2 Mutual Information ($I$)
+// Mutual information measures the amount of information one random variable contains about another.
+// *   **Definition**: $I(X; Y) = \\sum_{x,y} p(x,y) \\log \\frac{p(x,y)}{p(x)p(y)}$.
+// *   **Relationship to Entropy**: $I(X; Y) = H(X) - H(X|Y)$.
+// *   **Interpretation**: The reduction in the uncertainty of $X$ due to the knowledge of $Y$.
+
+// ### 3.3 Relative Entropy (Kullback-Leibler Divergence) ($D$)
+// A measure of the "distance" between two probability distributions $p$ and $q$.
+// *   **Definition**: $D(p || q) = \\sum_x p(x) \\log \\frac{p(x)}{q(x)}$.
+// *   **Interpretation**: The inefficiency of assuming the distribution is $q$ when the true distribution is $p$.
+// *   **Note**: It is not a true metric (not symmetric, doesn't satisfy triangle inequality).
+
+// ---
+
+// ## 4. Fundamental Theorems (Previews)
+
+// ### 4.1 The Asymptotic Equipartition Property (AEP)
+// The AEP is the "Law of Large Numbers" for information.
+// *   For a sequence of i.i.d. random variables $X_1, X_2, \\dots, X_n$:
+//     $$ -\\frac{1}{n} \\log p(X_1, \\dots, X_n) \\to H(X) $$
+// *   **Consequence**: The set of all possible sequences can be divided into two sets:
+//     1.  **Typical Set**: Contains almost all the probability, has size $\\approx 2^{nH(X)}$.
+//     2.  **Atypical Set**: Has negligible probability.
+
+// ### 4.2 Data Compression (Source Coding Theorem)
+// We can compress the output of a source with entropy $H(X)$ into a rate $R$ bits per symbol.
+// *   **Theorem**:
+//     *   If $R > H(X)$, reliable compression is possible.
+//     *   If $R < H(X)$, reliable compression is impossible without information loss.
+// *   **Intuition**: We assign short descriptions to frequent events and long descriptions to rare events.
+
+// ### 4.3 Channel Capacity (Channel Coding Theorem)
+// We can transmit data over a noisy channel with capacity $C$.
+// *   **Definition of Capacity**: $C = \\max_{p(x)} I(X; Y)$.
+// *   **Theorem**:
+//     *   If Rate $R < C$, there exists a code such that the probability of error $\\to 0$ as $n \\to \\infty$.
+//     *   If Rate $R > C$, the probability of error is bounded away from zero.
+// *   **Significance**: Noise does not set a limit on *accuracy*, only on the *rate* of communication. We can correct errors perfectly as long as we transmit below capacity.
+
+// ---
+
+// ## 5. Connections to Other Fields
+
+// ### 5.1 Physics (Thermodynamics)
+// *   **Second Law**: Entropy of an isolated system increases.
+// *   **Maxwell's Demon**: A thought experiment where a demon decreases entropy by sorting molecules. The resolution involves the cost of information processing (erasing the demon's memory increases entropy).
+
+// ### 5.2 Computer Science (Kolmogorov Complexity)
+// *   **Kolmogorov Complexity ($K(x)$)**: The length of the shortest computer program (in a universal language) that prints string $x$ and halts.
+// *   **Relation**: $K(x) \\approx H(X)$ for random strings. Kolmogorov complexity is the ultimate form of data compression.
+
+// ### 5.3 Statistics (Large Deviation Theory)
+// *   Information theory provides bounds on the probability of rare events (large deviations) using relative entropy $D(p||q)$.
+// *   It simplifies the analysis of hypothesis testing (Stein's Lemma).
+
+// ### 5.4 Portfolio Theory (Gambling)
+// *   **Doubling Rate**: The optimal growth rate of wealth in repeated gambling is related to entropy and mutual information.
+// *   **Kelly Criterion**: Betting proportional to the probability of winning maximizes the expected log wealth.
+
+// ---
+
+// ## 6. Summary of Key Inequalities
+// *   **Jensen's Inequality**: $E[f(X)] \\ge f(E[X])$ for convex functions.
+// *   **Information Inequality**: $D(p || q) \\ge 0$.
+// *   **Conditioning Reduces Entropy**: $H(X|Y) \\le H(X)$.
+
+// ## 7. Conclusion
+// Chapter 1 sets the stage for a unified mathematical theory that connects probability, statistics, computing, and communication through the concept of **Information Measures** ($H, I, D$). The core finding is that information can be treated as a physical quantity, subject to conservation laws and fundamental limits.
+
+            
+//         `,
+//         tags: "Information Theory • Cryptography • Research",
+//         date: "December 2025",
+//         gradient: "radial-gradient(rgb(168, 175, 255), rgb(0, 0, 197))"
+//     },
+    {
         id: "what-am-i-studying",
         title: "What Am I Studying Now?",
         summary: "The textbooks, resources, courses, and projects I am working through...",
@@ -169,7 +289,7 @@ export const blogs = [
         summary: "My experience from managing a personal portfolio...",
         description: `
             <i>The younger you are, the more risk tolerance you have as you have more total time to invest.</i> This does not mean to purchase exclusively risky assets at a young age, but rather embrace the process of action-based learning when it is affordable. The purpose of this block is to retain transparency on my personal finances.
-
+            
             <br /><br />
 
             My first personal portfolio was seeded as a custodial brokerage account, and gaining access to this fueled my curiosity. Working alongside a financial advisor, 
@@ -220,4 +340,3 @@ export const blogs = [
     gradient: ""
 },
 */
-

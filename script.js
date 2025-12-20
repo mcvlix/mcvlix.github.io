@@ -6,6 +6,223 @@ import { Navigation } from './js/navigation.js'
 import { Animations } from './js/animations.js'
 import { Accessibility } from './js/accessibility.js'
 
+/**
+ * Markdown Parser - Converts markdown to HTML matching existing styling
+ */
+function parseMarkdown(markdown) {
+    if (!markdown) return '';
+    
+    let html = markdown;
+    
+    // Preserve LaTeX math expressions FIRST (before any other processing)
+    // Display math ($$...$$) - must be done before inline math
+    const latexExpressions = [];
+    html = html.replace(/\$\$[\s\S]*?\$\$/g, (match) => {
+        const id = `MATH-DISPLAY-${latexExpressions.length}-MATH`; // Use hyphens instead of underscores to avoid markdown italic conflict
+        latexExpressions.push({ id, content: match });
+        return id;
+    });
+    
+    // Inline math ($...$) - but not if it's part of $$
+    html = html.replace(/(?<!\$)\$(?!\$)([^$\n]+?)\$(?!\$)/g, (match, math) => {
+        const id = `MATH-INLINE-${latexExpressions.length}-MATH`; // Use hyphens instead of underscores
+        latexExpressions.push({ id, content: match });
+        return id;
+    });
+    
+    // Preserve code blocks (before other processing)
+    const codeBlocks = [];
+    html = html.replace(/```[\s\S]*?```/g, (match) => {
+        const id = `CODE-BLOCK-${codeBlocks.length}-CODE`; // Hyphens are safe
+        codeBlocks.push({ id, content: match });
+        return id;
+    });
+    
+    // Preserve inline code
+    const inlineCodes = [];
+    html = html.replace(/`([^`]+)`/g, (match, code) => {
+        const id = `INLINE-CODE-${inlineCodes.length}-CODE`; // Hyphens are safe
+        inlineCodes.push({ id, content: `<code>${escapeHtml(code)}</code>` });
+        return id;
+    });
+    
+    // Split into lines for processing
+    const lines = html.split('\n');
+    const processedLines = [];
+    let inList = false;
+    let listType = null; // 'ul' or 'ol'
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmed = line.trim();
+        
+        // Headers
+        if (trimmed.match(/^### /)) {
+            if (inList) {
+                processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
+                inList = false;
+                listType = null;
+            }
+            processedLines.push(trimmed.replace(/^### (.*)$/, '<h3>$1</h3>'));
+            continue;
+        }
+        if (trimmed.match(/^## /)) {
+            if (inList) {
+                processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
+                inList = false;
+                listType = null;
+            }
+            processedLines.push(trimmed.replace(/^## (.*)$/, '<h2>$1</h2>'));
+            continue;
+        }
+        if (trimmed.match(/^# /)) {
+            if (inList) {
+                processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
+                inList = false;
+                listType = null;
+            }
+            processedLines.push(trimmed.replace(/^# (.*)$/, '<h1>$1</h1>'));
+            continue;
+        }
+        
+        // Horizontal rules
+        if (trimmed === '---') {
+            if (inList) {
+                processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
+                inList = false;
+                listType = null;
+            }
+            processedLines.push('<hr>');
+            continue;
+        }
+        
+        // Unordered list items
+        if (trimmed.match(/^\* /)) {
+            if (!inList || listType !== 'ul') {
+                if (inList && listType === 'ol') {
+                    processedLines.push('</ol>');
+                }
+                processedLines.push('<ul>');
+                inList = true;
+                listType = 'ul';
+            }
+            processedLines.push(trimmed.replace(/^\* (.*)$/, '<li>$1</li>'));
+            continue;
+        }
+        
+        // Ordered list items
+        if (trimmed.match(/^\d+\. /)) {
+            if (!inList || listType !== 'ol') {
+                if (inList && listType === 'ul') {
+                    processedLines.push('</ul>');
+                }
+                processedLines.push('<ol>');
+                inList = true;
+                listType = 'ol';
+            }
+            processedLines.push(trimmed.replace(/^\d+\. (.*)$/, '<li>$1</li>'));
+            continue;
+        }
+        
+        // Empty line - close list if open
+        if (trimmed === '') {
+            if (inList) {
+                processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
+                inList = false;
+                listType = null;
+            }
+            processedLines.push('');
+            continue;
+        }
+        
+        // Regular line
+        if (inList) {
+            processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
+            inList = false;
+            listType = null;
+        }
+        processedLines.push(trimmed);
+    }
+    
+    // Close any open list
+    if (inList) {
+        processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
+    }
+    
+    html = processedLines.join('\n');
+    
+    // Bold (**text**)
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    
+    // Italic (*text* or _text_) - but not if it's part of **
+    html = html.replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, '<em>$1</em>');
+    html = html.replace(/_([^_]+?)_/g, '<em>$1</em>');
+    
+    // Links [text](url)
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+    
+    // Paragraphs (double newline = paragraph break)
+    const paragraphs = html.split('\n\n');
+    html = paragraphs.map(para => {
+        para = para.trim();
+        if (!para) return '';
+        if (para.match(/^<(h[1-6]|ul|ol|hr|code|pre)/)) {
+            return para;
+        }
+        // Check if it's already wrapped in a tag
+        if (para.match(/^<[^>]+>/)) {
+            return para;
+        }
+        return '<p>' + para + '</p>';
+    }).filter(p => p).join('\n');
+    
+    // Single newlines within paragraphs become <br>
+    html = html.replace(/(<p>.*?<\/p>)/gs, (match) => {
+        return match.replace(/\n/g, '<br>');
+    });
+    
+    // Restore LaTeX expressions (must be done before code restoration)
+    latexExpressions.forEach(({ id, content }) => {
+        // Use a more robust replacement that handles all occurrences
+        html = html.split(id).join(content);
+    });
+    
+    // Restore inline code
+    inlineCodes.forEach(({ id, content }) => {
+        html = html.replace(id, content);
+    });
+    
+    // Restore code blocks
+    codeBlocks.forEach(({ id, content }) => {
+        const code = content.replace(/```(\w+)?\n?/g, '').replace(/```/g, '');
+        html = html.replace(id, `<pre><code>${escapeHtml(code)}</code></pre>`);
+    });
+    
+    return html;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+/**
+ * Render description based on type (md or HTML)
+ */
+function renderDescription(item) {
+    if (!item || !item.description) return '';
+    
+    const type = (item.type || 'HTML').toLowerCase();
+    
+    if (type === 'md' || type === 'markdown') {
+        return parseMarkdown(item.description);
+    }
+    
+    // Default: HTML (render as-is)
+    return item.description;
+}
+
 // Initialize modules
 let navigation, animations, accessibility;
 
@@ -668,7 +885,7 @@ function toggleProject(projectIndex) {
             
             // Remove blog-focused and show project with seamless fade-in
             // The project-focused will be added by displayProject, keeping main box miniature
-            document.body.classList.remove('blog-focused');
+            // document.body.classList.remove('blog-focused');
             displayProject(projectIndex);
         }, 400);
         return; // Exit early to prevent double handling
@@ -703,7 +920,7 @@ function toggleProject(projectIndex) {
             
             // Remove publication-focused and show project with seamless fade-in
             // The project-focused will be added by displayProject, keeping main box miniature
-            document.body.classList.remove('publication-focused');
+            // document.body.classList.remove('publication-focused');
             displayProject(projectIndex);
         }, 400);
         return; // Exit early to prevent double handling
@@ -747,7 +964,7 @@ function toggleProject(projectIndex) {
             // Now set new content
             projectDisplay.innerHTML = `
                 <div class="project-display-title">${project.title}</div>
-                <div class="project-display-description">${project.description}</div>
+                <div class="project-display-description">${renderDescription(project)}</div>
                 <div class="project-display-tags">${project.tags}</div>
                 <div class="project-display-date">${project.date}</div>
             `;
@@ -769,17 +986,34 @@ function toggleProject(projectIndex) {
             // Remove fade-out-down, add fade-in-up
             projectDisplay.classList.remove('fade-out-down');
             projectDisplay.classList.add('fade-in-up');
+            
+            // FIX: Position BEFORE making visible to prevent snap to top
+            // Position synchronously BEFORE setting visibility to prevent snap
+            if (window.innerWidth > 1024) {
+                // Ensure element is in DOM and has content for measurement
+                projectDisplay.style.display = 'block';
+                projectDisplay.style.visibility = 'hidden';
+                projectDisplay.style.opacity = '0';
+                positionProjectDisplay(true); // synchronous = true
+            }
+            
+            // Now make visible - position is already set
             projectDisplay.style.visibility = 'visible';
+            projectDisplay.style.opacity = '';
             
             // Trigger fade-in-up animation
+            // Swap focused classes synchronously BEFORE animation frame to prevent snap
+            document.body.classList.remove('blog-focused');
+            document.body.classList.remove('publication-focused');
+            document.body.classList.add('project-focused');
+            
             requestAnimationFrame(() => {
                 projectDisplay.classList.add('active');
-                document.body.classList.add('project-focused');
                 
-                // Position project display based on overlap with main box
+                // Fine-tune position after element is fully rendered (asynchronous, for adjustments)
                 if (window.innerWidth > 1024) {
                     setTimeout(() => {
-                        positionProjectDisplay();
+                        positionProjectDisplay(false); // asynchronous fine-tuning
                     }, 50);
                 }
             });
@@ -818,7 +1052,7 @@ function toggleProject(projectIndex) {
             
             blogDisplay.classList.add('fade-out-down');
             blogDisplay.classList.remove('active');
-            document.body.classList.remove('blog-focused');
+            // Don't remove blog-focused here to prevent snapping
             const activeBlogItems = document.querySelectorAll('#blogsContainer .project-item.active');
             activeBlogItems.forEach(item => {
                 item.classList.remove('active');
@@ -924,7 +1158,7 @@ function toggleBlog(blogIndex) {
             
             // Remove project-focused and show blog with seamless fade-in
             // The blog-focused will be added by displayBlog, keeping main box miniature
-            document.body.classList.remove('project-focused');
+            // Don't remove project-focused here to prevent snapping - let displayBlog handle the swap
             displayBlog(blogIndex);
         }, 400);
         return; // Exit early to prevent double handling
@@ -959,7 +1193,7 @@ function toggleBlog(blogIndex) {
             
             // Remove publication-focused and show blog with seamless fade-in
             // The blog-focused will be added by displayBlog, keeping main box miniature
-            document.body.classList.remove('publication-focused');
+            // Don't remove publication-focused here to prevent snapping - let displayBlog handle the swap
             displayBlog(blogIndex);
         }, 400);
         return; // Exit early to prevent double handling
@@ -1003,7 +1237,7 @@ function toggleBlog(blogIndex) {
             // Now set new content
             blogDisplay.innerHTML = `
                 <div class="project-display-title">${blog.title}</div>
-                <div class="project-display-description">${blog.description}</div>
+                <div class="project-display-description">${renderDescription(blog)}</div>
                 <div class="project-display-tags">${blog.tags}</div>
                 <div class="project-display-date">${blog.date}</div>
             `;
@@ -1025,17 +1259,29 @@ function toggleBlog(blogIndex) {
             // Remove fade-out-down, add fade-in-up
             blogDisplay.classList.remove('fade-out-down');
             blogDisplay.classList.add('fade-in-up');
+            
+            // FIX: Position BEFORE making visible to prevent snap to top
+            // Position synchronously BEFORE setting visibility to prevent snap
+            if (window.innerWidth > 1024) {
+                // Ensure element is in DOM and has content for measurement
+                blogDisplay.style.display = 'block';
+                blogDisplay.style.visibility = 'hidden';
+                blogDisplay.style.opacity = '0';
+                positionBlogDisplay(true); // synchronous = true
+            }
+            
+            // Now make visible - position is already set
             blogDisplay.style.visibility = 'visible';
+            blogDisplay.style.opacity = '';
             
             // Trigger fade-in-up animation
             requestAnimationFrame(() => {
                 blogDisplay.classList.add('active');
-                document.body.classList.add('blog-focused');
                 
-                // Position blog display based on overlap with main box
+                // Fine-tune position after element is fully rendered (asynchronous, for adjustments)
                 if (window.innerWidth > 1024) {
                     setTimeout(() => {
-                        positionBlogDisplay();
+                        positionBlogDisplay(false); // asynchronous fine-tuning
                     }, 50);
                 }
                 
@@ -1081,7 +1327,7 @@ function toggleBlog(blogIndex) {
             
             projectDisplay.classList.add('fade-out-down');
             projectDisplay.classList.remove('active');
-            document.body.classList.remove('project-focused');
+            // Don't remove project-focused here - let displayBlog handle the swap to prevent snapping
             const activeProjectItems = document.querySelectorAll('#projectsContainer .project-item.active');
             activeProjectItems.forEach(item => {
                 item.classList.remove('active');
@@ -1112,6 +1358,11 @@ function displayProject(projectIndex) {
     const project = projects[projectIndex];
     if (!project || !projectDisplay) return;
     
+    // IMMEDIATELY swap focused classes to prevent main box from snapping
+    // Remove all focused classes and add project-focused synchronously
+    document.body.classList.remove('blog-focused', 'publication-focused');
+    document.body.classList.add('project-focused');
+    
     // Close all catalogs when displaying a project
     closeProjectsSlider();
     closeBlogsSlider();
@@ -1141,7 +1392,7 @@ function displayProject(projectIndex) {
             </svg>
         </button>
         <div class="project-display-title">${project.title}</div>
-        <div class="project-display-description">${project.description}</div>
+        <div class="project-display-description">${renderDescription(project)}</div>
         <div class="project-display-tags">${project.tags}</div>
         <div class="project-display-date">${project.date}</div>
     `;
@@ -1195,19 +1446,30 @@ function displayProject(projectIndex) {
     // Start with fade-in-up state, then activate
     projectDisplay.classList.remove('fade-out-down');
     projectDisplay.classList.add('fade-in-up');
-    projectDisplay.style.visibility = 'visible';
     
-    // Add focused state immediately to keep main box miniature (no flash)
-    document.body.classList.add('project-focused');
+    // Position BEFORE making visible to prevent snap to top
+    
+    // Position synchronously BEFORE setting visibility to prevent snap
+    if (window.innerWidth > 1024) {
+        // Ensure element is in DOM and has content for measurement
+        projectDisplay.style.display = 'block';
+        projectDisplay.style.visibility = 'hidden';
+        projectDisplay.style.opacity = '0';
+        positionProjectDisplay(true); // synchronous = true
+    }
+    
+    // Now make visible - position is already set
+    projectDisplay.style.visibility = 'visible';
+    projectDisplay.style.opacity = '';
     
     // Trigger fadeInUp animation
     requestAnimationFrame(() => {
     projectDisplay.classList.add('active');
         
-        // Position project display based on overlap with main box
+        // Fine-tune position after element is fully rendered (asynchronous, for adjustments)
         if (window.innerWidth > 1024) {
             setTimeout(() => {
-                positionProjectDisplay();
+                positionProjectDisplay(false); // asynchronous fine-tuning
             }, 50);
         }
         
@@ -1247,6 +1509,11 @@ function displayBlog(blogIndex) {
     const blog = blogs[blogIndex];
     if (!blog || !blogDisplay) return;
     
+    // IMMEDIATELY swap focused classes to prevent main box from snapping
+    // Remove all focused classes and add blog-focused synchronously
+    document.body.classList.remove('project-focused', 'publication-focused');
+    document.body.classList.add('blog-focused');
+    
     // Close all catalogs when displaying a blog
     closeProjectsSlider();
     closeBlogsSlider();
@@ -1276,7 +1543,7 @@ function displayBlog(blogIndex) {
             </svg>
         </button>
         <div class="project-display-title">${blog.title}</div>
-        <div class="project-display-description">${blog.description}</div>
+        <div class="project-display-description">${renderDescription(blog)}</div>
         <div class="project-display-tags">${blog.tags}</div>
         <div class="project-display-date">${blog.date}</div>
     `;
@@ -1330,7 +1597,20 @@ function displayBlog(blogIndex) {
     // Start with fade-in-up state, then activate
     blogDisplay.classList.remove('fade-out-down');
     blogDisplay.classList.add('fade-in-up');
+    
+    // FIX: Position BEFORE making visible to prevent snap to top
+    // Position synchronously BEFORE setting visibility to prevent snap
+    if (window.innerWidth > 1024) {
+        // Ensure element is in DOM and has content for measurement
+        blogDisplay.style.display = 'block';
+        blogDisplay.style.visibility = 'hidden';
+        blogDisplay.style.opacity = '0';
+        positionBlogDisplay(true); // synchronous = true
+    }
+    
+    // Now make visible - position is already set
     blogDisplay.style.visibility = 'visible';
+    blogDisplay.style.opacity = '';
     
     // Add focused state immediately to keep main box miniature (no flash)
     document.body.classList.add('blog-focused');
@@ -1339,10 +1619,10 @@ function displayBlog(blogIndex) {
     requestAnimationFrame(() => {
         blogDisplay.classList.add('active');
         
-        // Position blog display based on overlap with main box
+        // Fine-tune position after element is fully rendered (asynchronous, for adjustments)
         if (window.innerWidth > 1024) {
             setTimeout(() => {
-                positionBlogDisplay();
+                positionBlogDisplay(false); // asynchronous fine-tuning
             }, 50);
         }
         
@@ -1518,7 +1798,7 @@ function togglePublication(publicationIndex) {
             
             publicationDisplay.innerHTML = `
                 <div class="project-display-title">${publication.title}</div>
-                <div class="project-display-description">${publication.description}</div>
+                <div class="project-display-description">${renderDescription(publication)}</div>
                 <div class="project-display-tags">${publication.tags}</div>
                 <div class="project-display-date">${publication.date}</div>
             `;
@@ -1537,15 +1817,28 @@ function togglePublication(publicationIndex) {
             
             publicationDisplay.classList.remove('fade-out-down');
             publicationDisplay.classList.add('fade-in-up');
+            
+            // FIX: Position BEFORE making visible to prevent snap to top
+            // Position synchronously BEFORE setting visibility to prevent snap
+            if (window.innerWidth > 1024) {
+                // Ensure element is in DOM and has content for measurement
+                publicationDisplay.style.display = 'block';
+                publicationDisplay.style.visibility = 'hidden';
+                publicationDisplay.style.opacity = '0';
+                positionPublicationDisplay(true); // synchronous = true
+            }
+            
+            // Now make visible - position is already set
             publicationDisplay.style.visibility = 'visible';
+            publicationDisplay.style.opacity = '';
             
             requestAnimationFrame(() => {
                 publicationDisplay.classList.add('active');
-                document.body.classList.add('publication-focused');
                 
+                // Fine-tune position after element is fully rendered (asynchronous, for adjustments)
                 if (window.innerWidth > 1024) {
                     setTimeout(() => {
-                        positionPublicationDisplay();
+                        positionPublicationDisplay(false); // asynchronous fine-tuning
                     }, 50);
                 }
                 
@@ -1587,6 +1880,11 @@ function displayPublication(publicationIndex) {
     const publication = publications[publicationIndex];
     if (!publication || !publicationDisplay) return;
     
+    // IMMEDIATELY swap focused classes to prevent main box from snapping
+    // Remove all focused classes and add publication-focused synchronously
+    document.body.classList.remove('project-focused', 'blog-focused');
+    document.body.classList.add('publication-focused');
+    
     // Close all catalogs when displaying a publication
     closeProjectsSlider();
     closeBlogsSlider();
@@ -1616,7 +1914,7 @@ function displayPublication(publicationIndex) {
             </svg>
         </button>
         <div class="project-display-title">${publication.title}</div>
-        <div class="project-display-description">${publication.description}</div>
+        <div class="project-display-description">${renderDescription(publication)}</div>
         <div class="project-display-tags">${publication.tags}</div>
         <div class="project-display-date">${publication.date}</div>
     `;
@@ -1670,19 +1968,29 @@ function displayPublication(publicationIndex) {
     // Start with fade-in-up state, then activate
     publicationDisplay.classList.remove('fade-out-down');
     publicationDisplay.classList.add('fade-in-up');
-    publicationDisplay.style.visibility = 'visible';
     
-    // Add focused state immediately to keep main box miniature (no flash)
-    document.body.classList.add('publication-focused');
+    // FIX: Position BEFORE making visible to prevent snap to top
+    // Position synchronously BEFORE setting visibility to prevent snap
+    if (window.innerWidth > 1024) {
+        // Ensure element is in DOM and has content for measurement
+        publicationDisplay.style.display = 'block';
+        publicationDisplay.style.visibility = 'hidden';
+        publicationDisplay.style.opacity = '0';
+        positionPublicationDisplay(true); // synchronous = true
+    }
+    
+    // Now make visible - position is already set
+    publicationDisplay.style.visibility = 'visible';
+    publicationDisplay.style.opacity = '';
     
     // Trigger fadeInUp animation
     requestAnimationFrame(() => {
         publicationDisplay.classList.add('active');
         
-        // Position publication display based on overlap with main box
+        // Fine-tune position after element is fully rendered (asynchronous, for adjustments)
         if (window.innerWidth > 1024) {
             setTimeout(() => {
-                positionPublicationDisplay();
+                positionPublicationDisplay(false); // asynchronous fine-tuning
             }, 50);
         }
         
@@ -1718,7 +2026,7 @@ function displayPublication(publicationIndex) {
 /**
  * Position publication display box based on overlap with main box
  */
-function positionPublicationDisplay() {
+function positionPublicationDisplay(synchronous = false) {
     if (!publicationDisplay || !mainBox) return;
     
     if (window.innerWidth <= 1024) {
@@ -1729,10 +2037,10 @@ function positionPublicationDisplay() {
         return;
     }
     
-    requestAnimationFrame(() => {
+    const doPositioning = () => {
         const mainBoxRect = mainBox.getBoundingClientRect();
         
-        const wasVisible = publicationDisplay.classList.contains('active');
+        const wasVisible = publicationDisplay.classList.contains('active') || getComputedStyle(publicationDisplay).visibility === 'visible';
         if (!wasVisible) {
             publicationDisplay.style.visibility = 'hidden';
             publicationDisplay.style.opacity = '0';
@@ -1772,26 +2080,35 @@ function positionPublicationDisplay() {
         
         const overlaps = overlapsHorizontally && overlapsVertically;
         
-        publicationDisplay.style.setProperty('transform', 'none', 'important');
+        const offsetAdjustment = 200; // Move boxes 200px lower
         
+        // Don't override transform - let CSS handle the translateY animation for fade-in
+        // Only set left/top for horizontal/vertical positioning
         if (overlaps) {
             publicationDisplay.style.setProperty('left', `${centerX}px`, 'important');
             publicationDisplay.style.setProperty('right', 'auto', 'important');
-            publicationDisplay.style.setProperty('top', `${mainBoxBottom + minMargin}px`, 'important');
+            publicationDisplay.style.setProperty('top', `${mainBoxBottom + minMargin + offsetAdjustment}px`, 'important');
         } else {
             publicationDisplay.style.setProperty('left', `${centerX}px`, 'important');
             publicationDisplay.style.setProperty('right', 'auto', 'important');
-            publicationDisplay.style.setProperty('top', `${mainBoxTop}px`, 'important');
+            publicationDisplay.style.setProperty('top', `${mainBoxTop + offsetAdjustment}px`, 'important');
         }
-    });
+    };
+    
+    if (synchronous) {
+        doPositioning();
+    } else {
+        requestAnimationFrame(doPositioning);
+    }
 }
 
 /**
  * Position project display box based on overlap with main box
  * - If overlaps with main box -> center underneath
  * - If doesn't overlap -> center at top (aligned with main box top)
+ * @param {boolean} synchronous - If true, calculate position synchronously without rAF (for pre-positioning before visibility)
  */
-function positionProjectDisplay() {
+function positionProjectDisplay(synchronous = false) {
     if (!projectDisplay || !mainBox) return;
     
     // Only apply this logic when on desktop
@@ -1804,13 +2121,12 @@ function positionProjectDisplay() {
         return;
     }
     
-    // Wait for next frame to ensure element is rendered
-    requestAnimationFrame(() => {
+    const doPositioning = () => {
         // Get bounding boxes
         const mainBoxRect = mainBox.getBoundingClientRect();
         
-        // Temporarily show element to measure it
-        const wasVisible = projectDisplay.classList.contains('active');
+        // Temporarily show element to measure it (only if not already visible)
+        const wasVisible = projectDisplay.classList.contains('active') || getComputedStyle(projectDisplay).visibility === 'visible';
         if (!wasVisible) {
             projectDisplay.style.visibility = 'hidden';
             projectDisplay.style.opacity = '0';
@@ -1855,21 +2171,46 @@ function positionProjectDisplay() {
         
         const overlaps = overlapsHorizontally && overlapsVertically;
         
-        // Override CSS transform to allow precise pixel positioning
-        projectDisplay.style.setProperty('transform', 'none', 'important');
+        // Don't override transform - let CSS handle the translateY animation for fade-in
+        // Only set left/top for horizontal/vertical positioning
+        
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/f4b07945-2e0c-4a32-af09-b1b9b4404978',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:2200',message:'BEFORE setting position',data:{computedLeft:getComputedStyle(projectDisplay).left,computedTop:getComputedStyle(projectDisplay).top,styleLeft:projectDisplay.style.left,styleTop:projectDisplay.style.top,getBoundingClientRectLeft:projectDisplay.getBoundingClientRect().left,getBoundingClientRectTop:projectDisplay.getBoundingClientRect().top,overlaps,willSetLeft:centerX,willSetTop:overlaps?mainBoxBottom+minMargin:mainBoxTop,mainBoxTop,mainBoxBottom,projectDisplayWidth,projectDisplayHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'I'})}).catch(()=>{});
+        // #endregion
+        
+        const offsetAdjustment = 200; // Move boxes 200px lower
         
         if (overlaps) {
             // Center underneath main box
+            const setTop = `${mainBoxBottom + minMargin + offsetAdjustment}px`;
             projectDisplay.style.setProperty('left', `${centerX}px`, 'important');
             projectDisplay.style.setProperty('right', 'auto', 'important');
-            projectDisplay.style.setProperty('top', `${mainBoxBottom + minMargin}px`, 'important');
+            projectDisplay.style.setProperty('top', setTop, 'important');
+            
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/f4b07945-2e0c-4a32-af09-b1b9b4404978',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:2208',message:'AFTER setting position (overlaps=true)',data:{computedLeft:getComputedStyle(projectDisplay).left,computedTop:getComputedStyle(projectDisplay).top,styleLeft:projectDisplay.style.left,styleTop:projectDisplay.style.top,getBoundingClientRectLeft:projectDisplay.getBoundingClientRect().left,getBoundingClientRectTop:projectDisplay.getBoundingClientRect().top,setTop},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'I'})}).catch(()=>{});
+            // #endregion
         } else {
             // Center at top, aligned with main box top
+            const setTop = `${mainBoxTop + offsetAdjustment}px`;
             projectDisplay.style.setProperty('left', `${centerX}px`, 'important');
             projectDisplay.style.setProperty('right', 'auto', 'important');
-            projectDisplay.style.setProperty('top', `${mainBoxTop}px`, 'important');
+            projectDisplay.style.setProperty('top', setTop, 'important');
+            
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/f4b07945-2e0c-4a32-af09-b1b9b4404978',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:2217',message:'AFTER setting position (overlaps=false)',data:{computedLeft:getComputedStyle(projectDisplay).left,computedTop:getComputedStyle(projectDisplay).top,styleLeft:projectDisplay.style.left,styleTop:projectDisplay.style.top,getBoundingClientRectLeft:projectDisplay.getBoundingClientRect().left,getBoundingClientRectTop:projectDisplay.getBoundingClientRect().top,setTop},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'I'})}).catch(()=>{});
+            // #endregion
         }
-    });
+    };
+    
+    if (synchronous) {
+        // For synchronous positioning, we need to ensure element is rendered first
+        // Use a minimal delay to allow DOM to update, but keep it synchronous in the call stack
+        doPositioning();
+    } else {
+        // Wait for next frame to ensure element is rendered
+        requestAnimationFrame(doPositioning);
+    }
 }
 
 /**
@@ -1877,7 +2218,7 @@ function positionProjectDisplay() {
  * - If overlaps with main box -> center underneath
  * - If doesn't overlap -> center at top (aligned with main box top)
  */
-function positionBlogDisplay() {
+function positionBlogDisplay(synchronous = false) {
     if (!blogDisplay || !mainBox) return;
     
     // Only apply this logic when on desktop
@@ -1890,13 +2231,12 @@ function positionBlogDisplay() {
         return;
     }
     
-    // Wait for next frame to ensure element is rendered
-    requestAnimationFrame(() => {
+    const doPositioning = () => {
         // Get bounding boxes
         const mainBoxRect = mainBox.getBoundingClientRect();
         
-        // Temporarily show element to measure it
-        const wasVisible = blogDisplay.classList.contains('active');
+        // Temporarily show element to measure it (only if not already visible)
+        const wasVisible = blogDisplay.classList.contains('active') || getComputedStyle(blogDisplay).visibility === 'visible';
         if (!wasVisible) {
             blogDisplay.style.visibility = 'hidden';
             blogDisplay.style.opacity = '0';
@@ -1940,21 +2280,29 @@ function positionBlogDisplay() {
         
         const overlaps = overlapsHorizontally && overlapsVertically;
         
-        // Override CSS transform to allow precise pixel positioning
-        blogDisplay.style.setProperty('transform', 'none', 'important');
+        const offsetAdjustment = 200; // Move boxes 200px lower
         
+        // Don't override transform - let CSS handle the translateY animation for fade-in
+        // Only set left/top for horizontal/vertical positioning
         if (overlaps) {
             // Center underneath main box
             blogDisplay.style.setProperty('left', `${centerX}px`, 'important');
             blogDisplay.style.setProperty('right', 'auto', 'important');
-            blogDisplay.style.setProperty('top', `${mainBoxBottom + minMargin}px`, 'important');
+            blogDisplay.style.setProperty('top', `${mainBoxBottom + minMargin + offsetAdjustment}px`, 'important');
         } else {
             // Center at top, aligned with main box top
             blogDisplay.style.setProperty('left', `${centerX}px`, 'important');
             blogDisplay.style.setProperty('right', 'auto', 'important');
-            blogDisplay.style.setProperty('top', `${mainBoxTop}px`, 'important');
+            blogDisplay.style.setProperty('top', `${mainBoxTop + offsetAdjustment}px`, 'important');
         }
-    });
+    };
+    
+    if (synchronous) {
+        doPositioning();
+    } else {
+        // Wait for next frame to ensure element is rendered
+        requestAnimationFrame(doPositioning);
+    }
 }
 
 /**
@@ -2768,6 +3116,20 @@ document.addEventListener('DOMContentLoaded', () => {
             minimizeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 toggleMinimizeMainBox();
+            });
+        }
+        
+        // Setup image toggle functionality
+        const introImage = document.querySelector('.intro-image');
+        if (introImage) {
+            const image1 = './icons/A48A1612-7454-42C0-ACD2-FB22DBAFC069.JPG';
+            const image2 = './icons/IMG_6033.PNG';
+            let currentImage = image1;
+            
+            introImage.style.cursor = 'pointer';
+            introImage.addEventListener('click', () => {
+                currentImage = currentImage === image1 ? image2 : image1;
+                introImage.src = currentImage;
             });
         }
         

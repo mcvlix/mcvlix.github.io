@@ -77,11 +77,11 @@ html, body {
     top: calc(60px + var(--spacing-base));
     left: var(--spacing-lg);
     width: auto;
-    max-width: 700px;
+    max-width: 935px;
     height: auto;
     min-height: 12%;
     padding: var(--spacing-base);
-    padding-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
     margin: 0;
     border: 2px solid var(--color-border-default);
     box-sizing: border-box;
@@ -348,28 +348,127 @@ body.publication-focused .minimize-btn {
     opacity: 1;
 }
 
-/* Subtitle */
+/* Subtitle - Reverted to basic state, mostly unused now as it's empty in HTML */
 .subtitle {
     letter-spacing: var(--letter-spacing-wide);
     flex: 1;
     position: relative;
-    padding-top: var(--spacing-xs);
+    padding-top: 0; /* Reduced from var(--spacing-xs) to move closer to name */
     padding-left: var(--spacing-base);
     padding-bottom: var(--spacing-base);
     font-size: var(--font-size-sm);
     font-weight: 300;
     text-overflow: ellipsis;
     white-space: wrap;
+    margin-top: -15px; /* Moved up another 10px from -5px */
     margin-bottom: var(--spacing-md);
     border-bottom: 1px solid transparent;
     border-image: radial-gradient(#b0b0b0, #d0d0d0);
     border-image-slice: 1;
 }
 
+/* Focused Subtitle - Only visible in focused mode */
+.focused-subtitle {
+    display: none;
+    text-align: center;
+    font-size: var(--font-size-lg);
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    letter-spacing: var(--letter-spacing-wide);
+    font-weight: 300;
+    margin-top: var(--spacing-sm);
+    margin-bottom: 0;
+    padding: 0;
+    padding-top: var(--spacing-sm);
+    /* Changed to border-top to place subtitle UNDERNEATH the line */
+    border-top: 1px solid transparent;
+    border-bottom: none;
+    border-image: radial-gradient(#b0b0b0, #d0d0d0);
+    border-image-slice: 1;
+    line-height: var(--line-height-normal);
+}
+
+/* Show focused subtitle in focused mode */
+body.project-focused .main-box .focused-subtitle,
+body.blog-focused .main-box .focused-subtitle,
+body.publication-focused .main-box .focused-subtitle {
+    display: block !important;
+    order: 2;
+}
+
+/* Main Content Wrapper - Side by side layout */
+.main-content-wrapper {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: flex-start;
+    margin: var(--spacing-md) var(--spacing-sm);
+}
+
+/* Intro Image Container */
+.intro-image-container {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+    height: 400px; /* Fixed height to crop top/bottom - portrait aspect ratio */
+    width: 320px; /* Fixed width to prevent size changes */
+    margin-top: 0px;
+}
+
+.intro-image {
+    width: 320px;
+    height: 400px;
+    max-width: 320px;
+    max-height: 400px;
+    min-width: 320px;
+    min-height: 400px;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+    object-position: center;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.intro-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    opacity: 0.9;
+}
+
+/* Intro Content - Text area */
+.intro-content {
+    flex: 1;
+    min-width: 0; /* Allows flex item to shrink below content size */
+}
+
+/* Responsive: Stack image and text vertically on smaller screens */
+@media (max-width: 768px) {
+    .main-content-wrapper {
+        flex-direction: column;
+        gap: var(--spacing-base);
+    }
+    
+    .intro-image-container {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+        height: 310px; /* Portrait aspect ratio on mobile */
+    }
+    
+    .intro-image {
+        width: 250px;
+        height: 310px;
+        max-width: 250px;
+        max-height: 310px;
+        min-width: 250px;
+        min-height: 310px;
+    }
+}
+
 /* Intro Title */
 .intro-title {
     letter-spacing: var(--letter-spacing-wide);
-    padding-left: var(--spacing-xs);
+    padding-left: 0;
     font-size: var(--font-size-lg);
     font-weight: 300;
     margin-bottom: var(--spacing-sm);
@@ -378,7 +477,7 @@ body.publication-focused .minimize-btn {
 
 /* Intro Text */
 .intro-text {
-    padding-left: var(--spacing-sm);
+    padding-left: 0;
     flex: 1;
     position: relative;
     font-size: var(--font-size-base);
@@ -386,7 +485,7 @@ body.publication-focused .minimize-btn {
     text-overflow: ellipsis;
     white-space: wrap;
     line-height: var(--line-height-relaxed);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-xs);
     letter-spacing: var(--letter-spacing-normal);
     color: var(--color-text-secondary);
 }
@@ -405,12 +504,15 @@ body.publication-focused .minimize-btn {
 .toggle-hint {
     flex-shrink: 0;
     padding-right: var(--spacing-base);
+    padding-top: var(--spacing-sm);
     position: relative;
     font-size: var(--font-size-sm);
     opacity: 0.5;
     text-align: right;
     font-style: italic;
     transition: opacity var(--transition-base);
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .main-box:hover .toggle-hint {
@@ -424,7 +526,7 @@ body.publication-focused .minimize-btn {
     z-index: var(--z-content);
     display: block;
     position: absolute;
-    top: calc(60px + var(--spacing-base)); /* Aligned at top with main-box */
+    top: calc(60px + var(--spacing-base) + 160px); /* Aligned at top with main-box, moved down 220px (200px additional) */
     left: var(--spacing-lg);
     right: var(--spacing-lg);
     width: auto;
@@ -454,12 +556,7 @@ body.publication-focused .minimize-btn {
                 transform 0.3s ease-out,
                 visibility 0s linear 0.3s,
                 border-color var(--transition-fast), 
-                box-shadow var(--transition-fast), 
-                max-width var(--transition-slower) ease-out,
-                width var(--transition-slower) ease-out,
-                right var(--transition-slower) ease-out,
-                left var(--transition-slower) ease-out,
-                top var(--transition-slower) ease-out;
+                box-shadow var(--transition-fast);
     pointer-events: none;
     box-shadow: var(--shadow-sm);
 }
@@ -472,7 +569,7 @@ body.publication-focused .minimize-btn {
 #publicationDisplay.active:hover {
     border-color: var(--color-border-hover);
     box-shadow: var(--shadow-md);
-    transform: translateY(0) scale(1.01);
+    transform: none;
 }
 
 .project-display.active,
@@ -486,8 +583,7 @@ body.publication-focused .minimize-btn {
                 transform 0.4s ease-out,
                 visibility 0s linear 0s,
                 border-color var(--transition-fast), 
-                box-shadow var(--transition-fast), 
-                max-width var(--transition-fast) ease-out;
+                box-shadow var(--transition-fast);
     /* Enhanced visibility when active */
     border-color: var(--color-border-hover);
 }
@@ -497,7 +593,7 @@ body.publication-focused .minimize-btn {
 #blogDisplay.fade-out-down,
 #publicationDisplay.fade-out-down {
     opacity: 0 !important;
-    transform: translateY(60px) !important;
+    transform: translateY(40px) !important;
     transition: opacity 0.4s ease-in-out, 
                 transform 0.4s ease-out,
                 visibility 0s linear 0.4s !important;
@@ -509,7 +605,7 @@ body.publication-focused .minimize-btn {
 #blogDisplay.fade-in-up,
 #publicationDisplay.fade-in-up {
     opacity: 0;
-    transform: translateY(-40px);
+    transform: translateY(-30px);
     transition: opacity 0.4s ease-in-out, 
                 transform 0.4s ease-out,
                 visibility 0s linear 0s;
@@ -525,54 +621,25 @@ body.publication-focused .minimize-btn {
 }
 
 /* Visual Hierarchy Shift - When project is focused */
+/* Positioning is handled by JavaScript - only control width here */
 body.project-focused .project-display.active {
     width: calc(65% - var(--spacing-lg) * 2);
     max-width: min(calc(70% - var(--spacing-lg) * 2), calc(100vw - var(--spacing-lg) * 2));
-    left: 50%;
-    transform: translateX(-50%);
-    right: auto;
-    top: calc(60px + var(--spacing-base));
-    transition: width var(--transition-slower) ease-out,
-                max-width var(--transition-slower) ease-out,
-                left var(--transition-slower) ease-out,
-                right var(--transition-slower) ease-out,
-                top var(--transition-slower) ease-out,
-                transform var(--transition-slower) ease-out,
-                opacity 0.3s ease-in-out;
+    /* JavaScript handles left, top, transform positioning */
 }
 
 /* Visual Hierarchy Shift - When blog is focused */
 body.blog-focused #blogDisplay.active {
     width: calc(65% - var(--spacing-lg) * 2);
     max-width: min(calc(70% - var(--spacing-lg) * 2), calc(100vw - var(--spacing-lg) * 2));
-    left: 50%;
-    transform: translateX(-50%);
-    right: auto;
-    top: calc(60px + var(--spacing-base));
-    transition: width var(--transition-slower) ease-out,
-                max-width var(--transition-slower) ease-out,
-                left var(--transition-slower) ease-out,
-                right var(--transition-slower) ease-out,
-                top var(--transition-slower) ease-out,
-                transform var(--transition-slower) ease-out,
-                opacity 0.3s ease-in-out;
+    /* JavaScript handles left, top, transform positioning */
 }
 
 /* Visual Hierarchy Shift - When publication is focused */
 body.publication-focused #publicationDisplay.active {
     width: calc(65% - var(--spacing-lg) * 2);
     max-width: min(calc(70% - var(--spacing-lg) * 2), calc(100vw - var(--spacing-lg) * 2));
-    left: 50%;
-    transform: translateX(-50%);
-    right: auto;
-    top: calc(60px + var(--spacing-base));
-    transition: width var(--transition-slower) ease-out,
-                max-width var(--transition-slower) ease-out,
-                left var(--transition-slower) ease-out,
-                right var(--transition-slower) ease-out,
-                top var(--transition-slower) ease-out,
-                transform var(--transition-slower) ease-out,
-                opacity 0.3s ease-in-out;
+    /* JavaScript handles left, top, transform positioning */
 }
 
 /* Removed all half-screen responsive styles - clean base for rebuilding */
@@ -592,17 +659,29 @@ body.publication-focused .main-box {
 
 body.project-focused .main-box .intro-text,
 body.project-focused .main-box .toggle-hint,
+body.project-focused .main-box .main-content-wrapper,
 body.blog-focused .main-box .intro-text,
 body.blog-focused .main-box .toggle-hint,
+body.blog-focused .main-box .main-content-wrapper,
 body.publication-focused .main-box .intro-text,
-body.publication-focused .main-box .toggle-hint {
+body.publication-focused .main-box .toggle-hint,
+body.publication-focused .main-box .main-content-wrapper {
     display: none;
+}
+
+/* Hide regular subtitle in focused mode */
+body.project-focused .main-box .subtitle,
+body.blog-focused .main-box .subtitle,
+body.publication-focused .main-box .subtitle {
+    display: none !important;
 }
 
 body.project-focused .main-box,
 body.blog-focused .main-box,
 body.publication-focused .main-box {
     text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
     body.project-focused .main-box .name-container,
@@ -615,6 +694,7 @@ body.publication-focused .main-box {
         padding-left: 0;
         justify-content: center;
         flex-wrap: wrap; /* Allow wrapping on very small screens */
+        order: 1; /* Name container appears first */
     }
 
     body.project-focused .main-box .name,
@@ -733,6 +813,11 @@ body.publication-focused .main-box {
     color: var(--color-text-secondary);
 }
 
+/* Remove top margin from first element in markdown */
+.project-display-description > *:first-child {
+    margin-top: 0 !important;
+}
+
 .project-display-description a {
     color: var(--color-link);
     text-decoration: underline;
@@ -741,6 +826,98 @@ body.publication-focused .main-box {
 
 .project-display-description a:hover {
     color: var(--color-link-hover);
+}
+
+/* Markdown styling - match existing HTML styling exactly */
+.project-display-description h1,
+.project-display-description h2,
+.project-display-description h3 {
+    font-family: inherit;
+    font-weight: 300;
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--spacing-base);
+    color: var(--color-text-secondary);
+}
+
+.project-display-description h1 {
+    font-size: var(--font-size-xl);
+    margin-top: var(--spacing-base);
+}
+
+.project-display-description h2 {
+    font-size: var(--font-size-lg);
+    margin-top: var(--spacing-base);
+}
+
+.project-display-description h3 {
+    font-size: var(--font-size-md);
+    margin-top: var(--spacing-sm);
+}
+
+.project-display-description p {
+    font-size: var(--font-size-md);
+    font-weight: 300;
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--spacing-base);
+    color: var(--color-text-secondary);
+}
+
+.project-display-description ul,
+.project-display-description ol {
+    font-size: var(--font-size-md);
+    font-weight: 300;
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--spacing-base);
+    margin-left: var(--spacing-base);
+    color: var(--color-text-secondary);
+    padding-left: var(--spacing-base);
+}
+
+.project-display-description li {
+    font-size: var(--font-size-md);
+    font-weight: 300;
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-secondary);
+}
+
+.project-display-description hr {
+    border: none;
+    border-top: 1px solid var(--color-text-tertiary);
+    margin: var(--spacing-base) 0;
+    width: 100%;
+}
+
+.project-display-description strong {
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.project-display-description em {
+    font-style: italic;
+}
+
+.project-display-description code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.project-display-description pre {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    background: rgba(255, 255, 255, 0.05);
+    padding: var(--spacing-sm);
+    border-radius: 4px;
+    overflow-x: auto;
+    margin-bottom: var(--spacing-base);
+}
+
+.project-display-description pre code {
+    background: none;
+    padding: 0;
 }
 
 /* Project Display Tags */
@@ -1207,8 +1384,9 @@ a:focus-visible {
         margin-left: 0 !important;
         margin-right: 0 !important;
         width: auto;
-        max-width: 700px;
+        max-width: 1000px;
         opacity: 1 !important;
+        margin-bottom: 15px !important; /* Reduced from default 20px */
     }
     
     /* Preserve minimized state even when focused - keep it in summarized form */
@@ -1223,6 +1401,7 @@ a:focus-visible {
         padding: var(--spacing-sm) !important;
         padding-bottom: var(--spacing-sm) !important;
         overflow: hidden !important;
+        margin-bottom: 15px !important; /* Reduced from default 20px */
     }
     
     /* 
@@ -1238,20 +1417,15 @@ a:focus-visible {
     body.blog-focused #blogDisplay.active,
     body.publication-focused #publicationDisplay.active {
         position: absolute !important;
-        left: 50% !important;
-        right: auto !important;
-        /* Top position: below main-box with 10px gap */
-        /* Fallback: 76px (top) + 350px (typical main-box height) + 10px (gap) = 436px */
-        top: calc(var(--main-box-bottom, 436px) + 10px) !important;
-        transform: translateX(-50%) translateY(0) !important;
-        width: 90% !important;
-        max-width: 90% !important;
+        /* Positioning handled by JavaScript for mobile */
+        width: auto !important;
+        max-width: none !important;
         min-width: 0 !important;
         height: auto !important;
         /* Allow natural height if content is shorter */
         bottom: auto !important;
         /* Max-height: viewport height - top position - bottom margin (15px) */
-        max-height: calc(100vh - var(--main-box-bottom, 436px) - 20px - 15px) !important;
+        max-height: calc(100vh - var(--main-box-bottom, 436px) - 45px) !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
         margin-left: 0 !important;
