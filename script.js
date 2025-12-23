@@ -2033,11 +2033,19 @@ function positionPublicationDisplay(synchronous = false) {
         publicationDisplay.style.removeProperty('left');
         publicationDisplay.style.removeProperty('right');
         publicationDisplay.style.removeProperty('top');
+        publicationDisplay.style.removeProperty('width');
         publicationDisplay.style.removeProperty('transform');
         return;
     }
     
     const doPositioning = () => {
+        // CRITICAL: Clear all positioning styles first to prevent mode conflicts
+        publicationDisplay.style.removeProperty('left');
+        publicationDisplay.style.removeProperty('right');
+        publicationDisplay.style.removeProperty('top');
+        publicationDisplay.style.removeProperty('width');
+        publicationDisplay.style.removeProperty('transform');
+        
         const mainBoxRect = mainBox.getBoundingClientRect();
         
         const wasVisible = publicationDisplay.classList.contains('active') || getComputedStyle(publicationDisplay).visibility === 'visible';
@@ -2048,7 +2056,7 @@ function positionPublicationDisplay(synchronous = false) {
         }
         
         const publicationDisplayRect = publicationDisplay.getBoundingClientRect();
-        const publicationDisplayWidth = publicationDisplayRect.width || 600;
+        let publicationDisplayWidth = publicationDisplayRect.width || 600;
         const publicationDisplayHeight = publicationDisplayRect.height || 400;
         
         if (!wasVisible) {
@@ -2061,37 +2069,77 @@ function positionPublicationDisplay(synchronous = false) {
         const mainBoxTop = mainBoxRect.top;
         const minMargin = 20;
         
-        const publicationDisplayTopAtCenter = mainBoxTop;
-        const publicationDisplayBottomAtCenter = mainBoxTop + publicationDisplayHeight;
+        // Determine if half-screen mode
+        const isHalfScreen = window.innerWidth <= 1800;
+        const sideMargin = 20; // 20px margin on both sides in half-screen mode
+        const offsetAdjustment = 200; // Move boxes 200px lower in full-screen
         
-        const centerX = (window.innerWidth - publicationDisplayWidth) / 2;
-        const publicationDisplayLeftAtCenter = centerX;
-        const publicationDisplayRightAtCenter = centerX + publicationDisplayWidth;
-        
-        const overlapsHorizontally = (
-            publicationDisplayLeftAtCenter < mainBoxRect.right && 
-            publicationDisplayRightAtCenter > mainBoxRect.left
-        );
-        
-        const overlapsVertically = (
-            publicationDisplayTopAtCenter < mainBoxRect.bottom && 
-            publicationDisplayBottomAtCenter > mainBoxRect.top
-        );
-        
-        const overlaps = overlapsHorizontally && overlapsVertically;
-        
-        const offsetAdjustment = 200; // Move boxes 200px lower
-        
-        // Don't override transform - let CSS handle the translateY animation for fade-in
-        // Only set left/top for horizontal/vertical positioning
-        if (overlaps) {
-            publicationDisplay.style.setProperty('left', `${centerX}px`, 'important');
-            publicationDisplay.style.setProperty('right', 'auto', 'important');
-            publicationDisplay.style.setProperty('top', `${mainBoxBottom + minMargin + offsetAdjustment}px`, 'important');
+        if (isHalfScreen) {
+            // Half-screen: ALWAYS hard obey window size with 20px margins on both sides
+            const setTop = `${mainBoxRect.bottom + 15}px`;
+            
+            // Force box-sizing to border-box to ensure width includes padding/border
+            publicationDisplay.style.setProperty('box-sizing', 'border-box', 'important');
+            
+            // Set left and right first to establish boundaries
+            publicationDisplay.style.setProperty('left', '20px', 'important');
+            publicationDisplay.style.setProperty('right', '20px', 'important');
+            
+            // Set width using calc() to ensure it's exactly window width minus 40px (20px each side)
+            publicationDisplay.style.setProperty('width', `calc(100vw - 40px)`, 'important');
+            publicationDisplay.style.setProperty('max-width', `calc(100vw - 40px)`, 'important'); // Hard limit
+            publicationDisplay.style.setProperty('min-width', '0', 'important'); // Prevent min-width from interfering
+            
+            publicationDisplay.style.setProperty('top', setTop, 'important');
+            publicationDisplay.style.setProperty('transform', 'none', 'important');
+            
+            // Force reflow and verify
+            void publicationDisplay.offsetWidth;
+            const finalRect = publicationDisplay.getBoundingClientRect();
+            const actualLeft = finalRect.left;
+            const actualRight = finalRect.right;
+            const windowWidth = window.innerWidth;
+            const leftMargin = actualLeft;
+            const rightMargin = windowWidth - actualRight;
+            
+            // If margins are off, force correction
+            if (Math.abs(leftMargin - 20) > 1 || Math.abs(rightMargin - 20) > 1) {
+                const correctedWidth = windowWidth - 40;
+                publicationDisplay.style.setProperty('width', `${correctedWidth}px`, 'important');
+                publicationDisplay.style.setProperty('left', '20px', 'important');
+                publicationDisplay.style.setProperty('right', 'auto', 'important');
+            }
         } else {
-            publicationDisplay.style.setProperty('left', `${centerX}px`, 'important');
+            // Full screen: Fixed max width (~1300px), truly centered, snap to same height as name box, ensure no overlap
+            const fixedMaxWidth = 1300; // 800px + 500px = 1300px max width
+            const actualWidth = Math.min(publicationDisplayWidth, fixedMaxWidth);
+            const centerX = (window.innerWidth - actualWidth) / 2;
+            
+            // Ensure it doesn't touch the title box - check horizontal overlap
+            const displayLeft = centerX;
+            const displayRight = centerX + actualWidth;
+            const mainBoxLeft = mainBoxRect.left;
+            const mainBoxRight = mainBoxRect.right;
+            const minGap = 20; // Minimum gap between display and main box
+            
+            let finalLeft = centerX;
+            // If horizontally overlapping, shift to the right
+            if (displayLeft < mainBoxRight + minGap && displayRight > mainBoxLeft - minGap) {
+                finalLeft = mainBoxRight + minGap;
+                // Re-center if shifted too far right
+                if (finalLeft + actualWidth > window.innerWidth - minGap) {
+                    finalLeft = (window.innerWidth - actualWidth) / 2;
+                }
+            }
+            
+            // Snap to exactly the same height as the name box (main box top)
+            const setTop = `${mainBoxTop}px`; // Exact same height as main box
+            
+            publicationDisplay.style.setProperty('left', `${finalLeft}px`, 'important');
             publicationDisplay.style.setProperty('right', 'auto', 'important');
-            publicationDisplay.style.setProperty('top', `${mainBoxTop + offsetAdjustment}px`, 'important');
+            publicationDisplay.style.setProperty('top', setTop, 'important');
+            publicationDisplay.style.setProperty('width', `${actualWidth}px`, 'important');
+            publicationDisplay.style.setProperty('max-width', `${fixedMaxWidth}px`, 'important');
         }
     };
     
@@ -2117,11 +2165,19 @@ function positionProjectDisplay(synchronous = false) {
         projectDisplay.style.removeProperty('left');
         projectDisplay.style.removeProperty('right');
         projectDisplay.style.removeProperty('top');
+        projectDisplay.style.removeProperty('width');
         projectDisplay.style.removeProperty('transform');
         return;
     }
     
     const doPositioning = () => {
+        // CRITICAL: Clear all positioning styles first to prevent mode conflicts
+        projectDisplay.style.removeProperty('left');
+        projectDisplay.style.removeProperty('right');
+        projectDisplay.style.removeProperty('top');
+        projectDisplay.style.removeProperty('width');
+        projectDisplay.style.removeProperty('transform');
+        
         // Get bounding boxes
         const mainBoxRect = mainBox.getBoundingClientRect();
         
@@ -2134,7 +2190,7 @@ function positionProjectDisplay(synchronous = false) {
         }
         
         const projectDisplayRect = projectDisplay.getBoundingClientRect();
-        const projectDisplayWidth = projectDisplayRect.width || 600;
+        let projectDisplayWidth = projectDisplayRect.width || 600;
         const projectDisplayHeight = projectDisplayRect.height || 400;
         
         if (!wasVisible) {
@@ -2149,56 +2205,90 @@ function positionProjectDisplay(synchronous = false) {
         const minMargin = 20; // Minimum 20px margin
         const spacingLg = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spacing-lg')) || 24;
         
-        // Check if project display would overlap with main box when centered at top
-        const projectDisplayTopAtCenter = mainBoxTop;
-        const projectDisplayBottomAtCenter = mainBoxTop + projectDisplayHeight;
-        
-        // Calculate center X
-        const centerX = (window.innerWidth - projectDisplayWidth) / 2;
-        const projectDisplayLeftAtCenter = centerX;
-        const projectDisplayRightAtCenter = centerX + projectDisplayWidth;
-        
-        // Check overlap
-        const overlapsHorizontally = (
-            projectDisplayLeftAtCenter < mainBoxRect.right && 
-            projectDisplayRightAtCenter > mainBoxRect.left
-        );
-        
-        const overlapsVertically = (
-            projectDisplayTopAtCenter < mainBoxRect.bottom && 
-            projectDisplayBottomAtCenter > mainBoxRect.top
-        );
-        
-        const overlaps = overlapsHorizontally && overlapsVertically;
-        
-        // Don't override transform - let CSS handle the translateY animation for fade-in
-        // Only set left/top for horizontal/vertical positioning
+        // Determine if half-screen mode
+        const isHalfScreen = window.innerWidth <= 1800;
+        const sideMargin = 20; // 20px margin on both sides in half-screen mode
+        const offsetAdjustment = 200; // Move boxes 200px lower in full-screen
         
         // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/f4b07945-2e0c-4a32-af09-b1b9b4404978',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:2200',message:'BEFORE setting position',data:{computedLeft:getComputedStyle(projectDisplay).left,computedTop:getComputedStyle(projectDisplay).top,styleLeft:projectDisplay.style.left,styleTop:projectDisplay.style.top,getBoundingClientRectLeft:projectDisplay.getBoundingClientRect().left,getBoundingClientRectTop:projectDisplay.getBoundingClientRect().top,overlaps,willSetLeft:centerX,willSetTop:overlaps?mainBoxBottom+minMargin:mainBoxTop,mainBoxTop,mainBoxBottom,projectDisplayWidth,projectDisplayHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'I'})}).catch(()=>{});
+        fetch('http://127.0.0.1:7242/ingest/f4b07945-2e0c-4a32-af09-b1b9b4404978',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:2175',message:'Positioning calculation start',data:{isHalfScreen,windowWidth:window.innerWidth,projectDisplayWidth,mainBoxRectLeft:mainBoxRect.left,mainBoxRectRight:mainBoxRect.right,mainBoxRectBottom:mainBoxRect.bottom,mainBoxRectTop:mainBoxRect.top},timestamp:Date.now(),sessionId:'debug-session',runId:'position-fix',hypothesisId:'H1'})}).catch(()=>{});
         // #endregion
         
-        const offsetAdjustment = 200; // Move boxes 200px lower
-        
-        if (overlaps) {
-            // Center underneath main box
-            const setTop = `${mainBoxBottom + minMargin + offsetAdjustment}px`;
-            projectDisplay.style.setProperty('left', `${centerX}px`, 'important');
-            projectDisplay.style.setProperty('right', 'auto', 'important');
+        if (isHalfScreen) {
+            // Half-screen: ALWAYS hard obey window size with 20px margins on both sides
+            // Use calc() to ensure exact width accounting for box-sizing: border-box
+            const setTop = `${mainBoxRect.bottom + 15}px`;
+            
+            // Force box-sizing to border-box to ensure width includes padding/border
+            projectDisplay.style.setProperty('box-sizing', 'border-box', 'important');
+            
+            // Set left and right first to establish boundaries
+            projectDisplay.style.setProperty('left', '20px', 'important');
+            projectDisplay.style.setProperty('right', '20px', 'important');
+            
+            // Set width using calc() to ensure it's exactly window width minus 40px (20px each side)
+            projectDisplay.style.setProperty('width', `calc(100vw - 40px)`, 'important');
+            projectDisplay.style.setProperty('max-width', `calc(100vw - 40px)`, 'important'); // Hard limit
+            projectDisplay.style.setProperty('min-width', '0', 'important'); // Prevent min-width from interfering
+            
             projectDisplay.style.setProperty('top', setTop, 'important');
+            projectDisplay.style.setProperty('transform', 'none', 'important');
+            
+            // Force reflow and verify
+            void projectDisplay.offsetWidth;
+            const finalRect = projectDisplay.getBoundingClientRect();
+            const actualLeft = finalRect.left;
+            const actualRight = finalRect.right;
+            const actualWidth = finalRect.width;
+            const windowWidth = window.innerWidth;
+            const leftMargin = actualLeft;
+            const rightMargin = windowWidth - actualRight;
             
             // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/f4b07945-2e0c-4a32-af09-b1b9b4404978',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:2208',message:'AFTER setting position (overlaps=true)',data:{computedLeft:getComputedStyle(projectDisplay).left,computedTop:getComputedStyle(projectDisplay).top,styleLeft:projectDisplay.style.left,styleTop:projectDisplay.style.top,getBoundingClientRectLeft:projectDisplay.getBoundingClientRect().left,getBoundingClientRectTop:projectDisplay.getBoundingClientRect().top,setTop},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'I'})}).catch(()=>{});
+            fetch('http://127.0.0.1:7242/ingest/f4b07945-2e0c-4a32-af09-b1b9b4404978',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:2195',message:'Half-screen positioning set',data:{sideMargin:20,setTop,windowWidth,actualLeft,actualRight,actualWidth,leftMargin,rightMargin,computedLeft:getComputedStyle(projectDisplay).left,computedRight:getComputedStyle(projectDisplay).right,computedWidth:getComputedStyle(projectDisplay).width,computedBoxSizing:getComputedStyle(projectDisplay).boxSizing,getBoundingClientRectLeft:projectDisplay.getBoundingClientRect().left,getBoundingClientRectRight:projectDisplay.getBoundingClientRect().right,getBoundingClientRectWidth:projectDisplay.getBoundingClientRect().width,mainBoxRectBottom:mainBoxRect.bottom},timestamp:Date.now(),sessionId:'debug-session',runId:'position-fix',hypothesisId:'H1'})}).catch(()=>{});
             // #endregion
+            
+            // If margins are off, force correction
+            if (Math.abs(leftMargin - 20) > 1 || Math.abs(rightMargin - 20) > 1) {
+                const correctedWidth = windowWidth - 40;
+                projectDisplay.style.setProperty('width', `${correctedWidth}px`, 'important');
+                projectDisplay.style.setProperty('left', '20px', 'important');
+                projectDisplay.style.setProperty('right', 'auto', 'important');
+            }
         } else {
-            // Center at top, aligned with main box top
-            const setTop = `${mainBoxTop + offsetAdjustment}px`;
-            projectDisplay.style.setProperty('left', `${centerX}px`, 'important');
+            // Full screen: Fixed max width (~1300px), truly centered, snap to same height as name box, ensure no overlap
+            const fixedMaxWidth = 1300; // 800px + 500px = 1300px max width
+            const actualWidth = Math.min(projectDisplayWidth, fixedMaxWidth);
+            const centerX = (window.innerWidth - actualWidth) / 2;
+            
+            // Ensure it doesn't touch the title box - check horizontal overlap
+            const displayLeft = centerX;
+            const displayRight = centerX + actualWidth;
+            const mainBoxLeft = mainBoxRect.left;
+            const mainBoxRight = mainBoxRect.right;
+            const minGap = 20; // Minimum gap between display and main box
+            
+            let finalLeft = centerX;
+            // If horizontally overlapping, shift to the right
+            if (displayLeft < mainBoxRight + minGap && displayRight > mainBoxLeft - minGap) {
+                finalLeft = mainBoxRight + minGap;
+                // Re-center if shifted too far right
+                if (finalLeft + actualWidth > window.innerWidth - minGap) {
+                    finalLeft = (window.innerWidth - actualWidth) / 2;
+                }
+            }
+            
+            // Snap to exactly the same height as the name box (main box top)
+            const setTop = `${mainBoxTop}px`; // Exact same height as main box
+            
+            projectDisplay.style.setProperty('left', `${finalLeft}px`, 'important');
             projectDisplay.style.setProperty('right', 'auto', 'important');
             projectDisplay.style.setProperty('top', setTop, 'important');
+            projectDisplay.style.setProperty('width', `${actualWidth}px`, 'important');
+            projectDisplay.style.setProperty('max-width', `${fixedMaxWidth}px`, 'important');
             
             // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/f4b07945-2e0c-4a32-af09-b1b9b4404978',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:2217',message:'AFTER setting position (overlaps=false)',data:{computedLeft:getComputedStyle(projectDisplay).left,computedTop:getComputedStyle(projectDisplay).top,styleLeft:projectDisplay.style.left,styleTop:projectDisplay.style.top,getBoundingClientRectLeft:projectDisplay.getBoundingClientRect().left,getBoundingClientRectTop:projectDisplay.getBoundingClientRect().top,setTop},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'I'})}).catch(()=>{});
+            fetch('http://127.0.0.1:7242/ingest/f4b07945-2e0c-4a32-af09-b1b9b4404978',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:2210',message:'Full-screen positioning set',data:{fixedMaxWidth,actualWidth,centerX,finalLeft,setTop,mainBoxTop,windowWidth:window.innerWidth,projectDisplayWidth,mainBoxLeft,mainBoxRight,displayLeft,displayRight,computedLeft:getComputedStyle(projectDisplay).left,computedTop:getComputedStyle(projectDisplay).top,computedWidth:getComputedStyle(projectDisplay).width},timestamp:Date.now(),sessionId:'debug-session',runId:'position-fix',hypothesisId:'H1'})}).catch(()=>{});
             // #endregion
         }
     };
@@ -2227,11 +2317,19 @@ function positionBlogDisplay(synchronous = false) {
         blogDisplay.style.removeProperty('left');
         blogDisplay.style.removeProperty('right');
         blogDisplay.style.removeProperty('top');
+        blogDisplay.style.removeProperty('width');
         blogDisplay.style.removeProperty('transform');
         return;
     }
     
     const doPositioning = () => {
+        // CRITICAL: Clear all positioning styles first to prevent mode conflicts
+        blogDisplay.style.removeProperty('left');
+        blogDisplay.style.removeProperty('right');
+        blogDisplay.style.removeProperty('top');
+        blogDisplay.style.removeProperty('width');
+        blogDisplay.style.removeProperty('transform');
+        
         // Get bounding boxes
         const mainBoxRect = mainBox.getBoundingClientRect();
         
@@ -2244,7 +2342,7 @@ function positionBlogDisplay(synchronous = false) {
         }
         
         const blogDisplayRect = blogDisplay.getBoundingClientRect();
-        const blogDisplayWidth = blogDisplayRect.width || 600;
+        let blogDisplayWidth = blogDisplayRect.width || 600;
         const blogDisplayHeight = blogDisplayRect.height || 400;
         
         if (!wasVisible) {
@@ -2258,42 +2356,77 @@ function positionBlogDisplay(synchronous = false) {
         const mainBoxTop = mainBoxRect.top;
         const minMargin = 20; // Minimum 20px margin
         
-        // Check if blog display would overlap with main box when centered at top
-        const blogDisplayTopAtCenter = mainBoxTop;
-        const blogDisplayBottomAtCenter = mainBoxTop + blogDisplayHeight;
+        // Determine if half-screen mode
+        const isHalfScreen = window.innerWidth <= 1800;
+        const sideMargin = 20; // 20px margin on both sides in half-screen mode
+        const offsetAdjustment = 200; // Move boxes 200px lower in full-screen
         
-        // Calculate center X
-        const centerX = (window.innerWidth - blogDisplayWidth) / 2;
-        const blogDisplayLeftAtCenter = centerX;
-        const blogDisplayRightAtCenter = centerX + blogDisplayWidth;
-        
-        // Check overlap
-        const overlapsHorizontally = (
-            blogDisplayLeftAtCenter < mainBoxRect.right && 
-            blogDisplayRightAtCenter > mainBoxRect.left
-        );
-        
-        const overlapsVertically = (
-            blogDisplayTopAtCenter < mainBoxRect.bottom && 
-            blogDisplayBottomAtCenter > mainBoxRect.top
-        );
-        
-        const overlaps = overlapsHorizontally && overlapsVertically;
-        
-        const offsetAdjustment = 200; // Move boxes 200px lower
-        
-        // Don't override transform - let CSS handle the translateY animation for fade-in
-        // Only set left/top for horizontal/vertical positioning
-        if (overlaps) {
-            // Center underneath main box
-            blogDisplay.style.setProperty('left', `${centerX}px`, 'important');
-            blogDisplay.style.setProperty('right', 'auto', 'important');
-            blogDisplay.style.setProperty('top', `${mainBoxBottom + minMargin + offsetAdjustment}px`, 'important');
+        if (isHalfScreen) {
+            // Half-screen: ALWAYS hard obey window size with 20px margins on both sides
+            const setTop = `${mainBoxRect.bottom + 15}px`;
+            
+            // Force box-sizing to border-box to ensure width includes padding/border
+            blogDisplay.style.setProperty('box-sizing', 'border-box', 'important');
+            
+            // Set left and right first to establish boundaries
+            blogDisplay.style.setProperty('left', '20px', 'important');
+            blogDisplay.style.setProperty('right', '20px', 'important');
+            
+            // Set width using calc() to ensure it's exactly window width minus 40px (20px each side)
+            blogDisplay.style.setProperty('width', `calc(100vw - 40px)`, 'important');
+            blogDisplay.style.setProperty('max-width', `calc(100vw - 40px)`, 'important'); // Hard limit
+            blogDisplay.style.setProperty('min-width', '0', 'important'); // Prevent min-width from interfering
+            
+            blogDisplay.style.setProperty('top', setTop, 'important');
+            blogDisplay.style.setProperty('transform', 'none', 'important');
+            
+            // Force reflow and verify
+            void blogDisplay.offsetWidth;
+            const finalRect = blogDisplay.getBoundingClientRect();
+            const actualLeft = finalRect.left;
+            const actualRight = finalRect.right;
+            const windowWidth = window.innerWidth;
+            const leftMargin = actualLeft;
+            const rightMargin = windowWidth - actualRight;
+            
+            // If margins are off, force correction
+            if (Math.abs(leftMargin - 20) > 1 || Math.abs(rightMargin - 20) > 1) {
+                const correctedWidth = windowWidth - 40;
+                blogDisplay.style.setProperty('width', `${correctedWidth}px`, 'important');
+                blogDisplay.style.setProperty('left', '20px', 'important');
+                blogDisplay.style.setProperty('right', 'auto', 'important');
+            }
         } else {
-            // Center at top, aligned with main box top
-            blogDisplay.style.setProperty('left', `${centerX}px`, 'important');
+            // Full screen: Fixed max width (~1300px), truly centered, snap to same height as name box, ensure no overlap
+            const fixedMaxWidth = 1300; // 800px + 500px = 1300px max width
+            const actualWidth = Math.min(blogDisplayWidth, fixedMaxWidth);
+            const centerX = (window.innerWidth - actualWidth) / 2;
+            
+            // Ensure it doesn't touch the title box - check horizontal overlap
+            const displayLeft = centerX;
+            const displayRight = centerX + actualWidth;
+            const mainBoxLeft = mainBoxRect.left;
+            const mainBoxRight = mainBoxRect.right;
+            const minGap = 20; // Minimum gap between display and main box
+            
+            let finalLeft = centerX;
+            // If horizontally overlapping, shift to the right
+            if (displayLeft < mainBoxRight + minGap && displayRight > mainBoxLeft - minGap) {
+                finalLeft = mainBoxRight + minGap;
+                // Re-center if shifted too far right
+                if (finalLeft + actualWidth > window.innerWidth - minGap) {
+                    finalLeft = (window.innerWidth - actualWidth) / 2;
+                }
+            }
+            
+            // Snap to exactly the same height as the name box (main box top)
+            const setTop = `${mainBoxTop}px`; // Exact same height as main box
+            
+            blogDisplay.style.setProperty('left', `${finalLeft}px`, 'important');
             blogDisplay.style.setProperty('right', 'auto', 'important');
-            blogDisplay.style.setProperty('top', `${mainBoxTop + offsetAdjustment}px`, 'important');
+            blogDisplay.style.setProperty('top', setTop, 'important');
+            blogDisplay.style.setProperty('width', `${actualWidth}px`, 'important');
+            blogDisplay.style.setProperty('max-width', `${fixedMaxWidth}px`, 'important');
         }
     };
     
@@ -3218,23 +3351,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Setup resize listener for project/blog display positioning
+    // Setup resize listener for project/blog display positioning - refresh on ANY window size change
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
+            // Always refresh positioning on resize, regardless of current state
             if (projectDisplay && projectDisplay.classList.contains('active') && 
                 window.innerWidth > 1024) {
-                positionProjectDisplay();
+                positionProjectDisplay(true); // Use synchronous positioning for immediate update
             }
             if (blogDisplay && blogDisplay.classList.contains('active') && 
                 window.innerWidth > 1024) {
-                positionBlogDisplay();
+                positionBlogDisplay(true); // Use synchronous positioning for immediate update
             }
             if (publicationDisplay && publicationDisplay.classList.contains('active') && 
                 window.innerWidth > 1024) {
-                positionPublicationDisplay();
+                positionPublicationDisplay(true); // Use synchronous positioning for immediate update
             }
-        }, 100);
+        }, 50); // Reduced timeout for faster response
     });
 });

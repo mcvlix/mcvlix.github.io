@@ -526,7 +526,7 @@ body.publication-focused .main-box .focused-subtitle {
     z-index: var(--z-content);
     display: block;
     position: absolute;
-    top: calc(60px + var(--spacing-base) + 160px); /* Aligned at top with main-box, moved down 220px (200px additional) */
+    top: calc(60px + var(--spacing-base) + 200px); /* Aligned at top with main-box, moved down 200px to match JavaScript offsetAdjustment */
     left: var(--spacing-lg);
     right: var(--spacing-lg);
     width: auto;
@@ -551,9 +551,7 @@ body.publication-focused .main-box .focused-subtitle {
     scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(20px);
     transition: opacity 0.3s ease-in-out, 
-                transform 0.3s ease-out,
                 visibility 0s linear 0.3s,
                 border-color var(--transition-fast), 
                 box-shadow var(--transition-fast);
@@ -569,7 +567,6 @@ body.publication-focused .main-box .focused-subtitle {
 #publicationDisplay.active:hover {
     border-color: var(--color-border-hover);
     box-shadow: var(--shadow-md);
-    transform: none;
 }
 
 .project-display.active,
@@ -577,10 +574,8 @@ body.publication-focused .main-box .focused-subtitle {
 #publicationDisplay.active {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
     pointer-events: auto;
     transition: opacity 0.4s ease-in-out, 
-                transform 0.4s ease-out,
                 visibility 0s linear 0s,
                 border-color var(--transition-fast), 
                 box-shadow var(--transition-fast);
@@ -593,9 +588,7 @@ body.publication-focused .main-box .focused-subtitle {
 #blogDisplay.fade-out-down,
 #publicationDisplay.fade-out-down {
     opacity: 0 !important;
-    transform: translateY(40px) !important;
     transition: opacity 0.4s ease-in-out, 
-                transform 0.4s ease-out,
                 visibility 0s linear 0.4s !important;
     pointer-events: none;
 }
@@ -605,9 +598,7 @@ body.publication-focused .main-box .focused-subtitle {
 #blogDisplay.fade-in-up,
 #publicationDisplay.fade-in-up {
     opacity: 0;
-    transform: translateY(-30px);
     transition: opacity 0.4s ease-in-out, 
-                transform 0.4s ease-out,
                 visibility 0s linear 0s;
     pointer-events: none;
 }
@@ -616,7 +607,6 @@ body.publication-focused .main-box .focused-subtitle {
 #blogDisplay.fade-in-up.active,
 #publicationDisplay.fade-in-up.active {
     opacity: 1 !important;
-    transform: translateY(0) !important;
     pointer-events: auto;
 }
 
